@@ -12,7 +12,7 @@ class Etat
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-// TestFinal
+// TestFinale
     #[ORM\Column(length: 30)]
     private ?string $libelle = null;
 
