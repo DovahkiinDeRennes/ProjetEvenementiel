@@ -14,7 +14,7 @@ class Etat
     private ?int $id = null;
 
     #[ORM\Column(length: 30)]
-    private ?string $libelle = null;
+    private ?string $libelle;
 
     public function getId(): ?int
     {
