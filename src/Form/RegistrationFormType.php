@@ -53,7 +53,7 @@ class RegistrationFormType extends AbstractType
         $builder->add('siteId',EntityType::class,[
             'class' => Site::class,
             'choice_label' => 'nom',
-            'placeholder' => 'Choisir un sites',
+            'placeholder' => 'Choisir un site',
             'required' => false,
         ]);
     }
