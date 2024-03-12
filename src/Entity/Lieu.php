@@ -37,7 +37,7 @@ class Lieu
 
     public function __construct()
     {
-        $this->villeId = new ArrayCollection();
+        $this->villeId = null;
         $this->sorties = new ArrayCollection();
     }
 

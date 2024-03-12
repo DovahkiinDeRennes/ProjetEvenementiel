@@ -5,7 +5,38 @@
 
 {% block body %}
 
-    <p>Gestion des lieux</p>
+
+    <table >
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Ville</th>
+            <th scope="col">Nom</th>
+            <th scope="col">Rue</th>
+            <th scope="col">Latitude</th>
+            <th scope="col">Longitude</th>
+            {% if is_granted('ROLE_ADMIN') %}
+                <th scope="col">Supprimez</th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for place in places %}
+            <tr>
+                <th scope="row">{{ place.id }}</th>
+                {% if place.villeId is not empty %}
+                    <td>  {{ place.villeId.nom }}</td>
+                {% endif %}
+                <td>{{ place.nom }}</td>
+                <td>  {{ place.rue }}</td>
+                <td>  {{ place.latitude }}</td>
+                <td>  {{ place.longitude }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url('admin_createPlace') }}">Ajouter</a>
+
 {% endblock %}
 
 {% block js %}
