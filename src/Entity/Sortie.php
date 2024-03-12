@@ -37,12 +37,15 @@ class Sortie
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     private ?Lieu $lieuId = null;
 
-    #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'sorties')]
-    private Collection $participationId;
+
+
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'sorties')]
+    private Collection $users;
 
     public function __construct()
     {
         $this->participationId = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -154,6 +157,33 @@ class Sortie
     public function removeParticipationId(Participant $participationId): static
     {
         $this->participationId->removeElement($participationId);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addSorty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeSorty($this);
+        }
 
         return $this;
     }

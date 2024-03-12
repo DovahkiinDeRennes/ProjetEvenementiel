@@ -18,13 +18,16 @@ class Site
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\OneToMany(targetEntity: Participant::class, mappedBy: 'siteId')]
-    private Collection $participants;
+
+
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'siteId')]
+    private Collection $users;
 
     public function __construct()
     {
 
         $this->participants = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -68,6 +71,36 @@ class Site
             // set the owning side to null (unless already changed)
             if ($participant->getSiteId() === $this) {
                 $participant->setSiteId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->setSiteId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getSiteId() === $this) {
+                $user->setSiteId(null);
             }
         }
 
