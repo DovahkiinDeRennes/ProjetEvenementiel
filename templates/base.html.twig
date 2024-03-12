@@ -13,18 +13,29 @@
 <header>
     <nav>
         <ul>
+            {% if is_granted('ROLE_ADMIN') %}
             <li>
                 <a href="{{ url('admin_place') }}">Gérer les lieux</a>
             </li>
             <li>
                 <a href="{{ url('admin_site') }}">Gérer les sites</a>
             </li>
+            {% endif %}
             <li>
                 <a href="{{ url('home_home') }}">Accueil</a>
             </li>
             <li>
                 {# <a href="{{ url('user_update', {'id': user.id }) }}">Modifier son compte</a> #}
             </li>
+            {% if is_granted('IS_AUTHENTICATED') %}
+                <li>
+                    <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                </li>
+            {% else%}
+                <li>
+                    <a href="{{ path('app_login') }}">Se connecter</a>
+                </li>
+            {% endif %}
         </ul>
     </nav>
 </header>

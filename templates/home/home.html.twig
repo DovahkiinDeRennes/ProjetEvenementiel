@@ -4,7 +4,30 @@
 
 
 {% block body %}
-    <p>Test</p>
+    <h2>Filtrer les sorties</h2>
+
+    <div>
+    <table>
+        <thead>
+        <tr>
+            <th>Nom de la sortie</th>
+            <th>Date de la sortie</th>
+            <th>Clôture</th>
+            <th>Inscrits/Places</th>
+            <th>Etat</th>
+            <th>Inscrit</th>
+            <th>Organisateur</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr></tr>
+        </tbody>
+    </table>
+    </div>
+    <div>
+        <a href="{{ url('sortie_create') }}"><input type="submit" value="Créer une sortie"></a>
+    </div>
 {% endblock %}
 
 {% block js %}
