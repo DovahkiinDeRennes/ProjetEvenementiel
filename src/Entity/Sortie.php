@@ -37,7 +37,8 @@ class Sortie
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     private ?Lieu $lieuId = null;
 
-
+    #[ORM\Column(length: 255)]
+    private ?string $description = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'sorties')]
     private Collection $users;
@@ -137,6 +138,19 @@ class Sortie
         return $this;
     }
 
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Participant>
      */
@@ -188,3 +202,4 @@ class Sortie
         return $this;
     }
 }
+
