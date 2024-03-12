@@ -26,6 +26,9 @@ class SortieController extends AbstractController
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $em->persist($sortie);
             $em->flush();
+
+            $this->addFlash('success', 'La sortie a bien été enregistrée.');
+            return $this->redirectToRoute('home_home');
         }
 
         return $this->render('sortie/create.html.twig', [
