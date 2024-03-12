@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Category;
+
 use App\Entity\Site;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
