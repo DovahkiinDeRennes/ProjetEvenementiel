@@ -10,6 +10,15 @@
         {{ importmap ('app') }}
     {% endblock %}
 </head>
+<header>
+    <nav>
+        <ul>
+            <li>
+                {# <a href="{{ url('user_update', {'id': user.id }) }}">Modifier son compte</a> #}
+            </li>
+        </ul>
+    </nav>
+</header>
 <body>
 
 {% block body %}
