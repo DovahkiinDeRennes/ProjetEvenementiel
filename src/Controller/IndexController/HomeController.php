@@ -17,9 +17,18 @@ class HomeController extends  AbstractController
     #[Route(path: '',name: 'home',methods:['GET'])]
     public function home(EntityManagerInterface $entityManager, SortieRepository $sortieRepository): Response
     {
+
         $sorties = $sortieRepository->findAllEvents();
+
+        $count = [];
+        foreach ($sorties as $sortie) {
+            $count[$sortie->getId()] = $sortie->getUsers()->count();
+        }
+
         return $this->render('home/home.html.twig', [
-            'sorties'=> $sorties
+            'sorties'=> $sorties,
+            'count' => $count
+
         ]);
     }
 }

@@ -6,6 +6,7 @@ namespace App\Controller\SortieController;
 
 use App\Entity\Etat;
 use App\Entity\Sortie;
+use App\Entity\User;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,6 +40,43 @@ class SortieController extends AbstractController
         return $this->render('sortie/create.html.twig', [
             'sortieForm' => $sortieForm
         ]);
+    }
+
+
+    #[Route('suscribe/{id}', name: 'suscribe', methods: ['GET', 'POST'])]
+    public function suscribe(Request $request, EntityManagerInterface $em): Response
+    {
+        $userId = $this->getUser()->getId();
+        $sortieId = $request->attributes->get('id');
+        $sortie = $em->getRepository(Sortie::class)->find($sortieId);
+
+        $user = $em->getRepository(User::class)->find($userId);
+
+
+        if ($user->getSorties()){
+            $user->addSorty($sortie);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('home_home');
+    }
+
+    #[Route('unsuscribe/{id}', name: 'unsuscribe', methods: ['GET', 'POST'])]
+    public function unsuscribe(Request $request, EntityManagerInterface $em): Response
+    {
+        $userId = $this->getUser()->getId();
+        $sortieId = $request->attributes->get('id');
+        $sortie = $em->getRepository(Sortie::class)->find($sortieId);
+
+        $user = $em->getRepository(User::class)->find($userId);
+
+
+        if ($user->getSorties()){
+            $user->removeSorty($sortie);
+            $em->flush();
+        }
+
+        return $this->render('home/home.html.twig');
     }
 
     #[Route('update', name: 'update', methods: ['GET', 'POST'])]

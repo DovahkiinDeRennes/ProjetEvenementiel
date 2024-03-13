@@ -31,7 +31,7 @@
 
                 <td> {% if sortie.etatId  is not empty %}{{ sortie.etatId.libelle }} {% endif %}</td>
 
-            <td></td>
+            <td> {{ count[sortie.id] }}</td>
             <td> {% if sortie.organisateur is not empty %}{{ sortie.organisateur.pseudo }} {% endif %}</td>
 
             <td>
@@ -49,9 +49,10 @@
 
                 {#  Si d de la personne connectée != id sortie.organisateur #}
                     {# Si inscrit #}
-                {#  <a href="{{ url('sortie_suscribe') }}">Se désister</a> #}
+
+                <a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}">Se désister</a>
                     {# sinon #}
-                {#  <a href="{{ url('sortie_unsuscribe') }}">S'inscrire</a>#}
+                 <a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}">S'inscrire</a>
                     {# endif #}
                 {# endif #}
 
