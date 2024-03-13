@@ -19,8 +19,8 @@
             <span>{{ users.siteId }}</span>
         {% endif %}
     {%endfor%}
-
-
+{{ form_errors(form.password) }}
+    {{ form_row(form.password) }}
     <button type="submit" class="btn">Register</button>
     {{ form_end(form) }}
 {% endblock %}

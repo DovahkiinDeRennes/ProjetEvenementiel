@@ -36,8 +36,10 @@ $form->handleRequest($request);
 
         $entityManager->persist($user);
         $entityManager->flush();
+     // dd($user);
+         return $this->redirectToRoute('home_home');
 
-        return $this->redirectToRoute('user_updateUser', ['id' => $user->getId()]);
+
     }
     // }
 
