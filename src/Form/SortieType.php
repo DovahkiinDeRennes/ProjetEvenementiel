@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -24,14 +25,15 @@ class SortieType extends AbstractType
             ->add('nom', TextType::class, [
                 'label' => 'Nom de la sortie :'
             ])
-            ->add('dateHeureDebut', DateType::class, [
+            ->add('dateHeureDebut', DateTimeType::class, [
                 'widget' => 'single_text',
             ])
-            ->add('dateLimiteInscription', DateType::class, [
+            ->add('dateLimiteInscription', DateTimeType::class, [
                 'widget' => 'single_text',
             ])
             ->add('nbInscriptionMax', IntegerType::class, [
                 'label' => 'Nombre de places :',
+                'attr' => ['min' => 1, 'max' => 255],
             ])
             ->add('duree', IntegerType::class, [
                 'label' => 'Durée (en minutes) :',
@@ -41,6 +43,7 @@ class SortieType extends AbstractType
                 'label' => 'Description et infos :',
             ])
             ->add('lieuId', EntityType::class, [
+                'label' => 'Lieu :',
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
             ])

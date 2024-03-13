@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -17,27 +18,38 @@ class Sortie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom de la sortie doit être renseigné.')]
+    #[Assert\Length(max: 255, maxMessage: 'Le nom de la sortie ne doit pas dépasser {{ limit }} caractères.')]
     private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotNull(message: 'La date et l\'heure de début doivent être renseignées.')]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: 'La duree de la sortie doit être renseignée.')]
+    #[Assert\GreaterThan(0, message: 'La duree de la sortie doit être supérieure à 0.')]
     private ?int $duree = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotNull(message: 'La date limite d\'inscription doit être renseignée.')]
     private ?\DateTimeInterface $dateLimiteInscription = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $nbInscriptionMax = null;
+    #[Assert\NotNull(message: 'Le nombre maximum d\'inscrits doit être renseigné.')]
+    #[Assert\GreaterThan(0)]
+    private ?int $nbInscriptionMax = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
     private ?Etat $etatId = null;
 
     #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[Assert\NotNull(message: 'Le lieu de la sortie doit être renseigné.')]
     private ?Lieu $lieuId = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(max: 255, maxMessage: 'La description de la sortie ne doit pas dépasser {{ limit }} caractères.')]
+    #[Assert\NotBlank(message: 'La description de la sortie ne doit pas être vide.')]
     private ?string $description = null;
 
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'sorties')]
@@ -102,12 +114,12 @@ class Sortie
         return $this;
     }
 
-    public function getNbInscriptionMax(): ?string
+    public function getNbInscriptionMax(): ?int
     {
         return $this->nbInscriptionMax;
     }
 
-    public function setNbInscriptionMax(string $nbInscriptionMax): static
+    public function setNbInscriptionMax(int $nbInscriptionMax): static
     {
         $this->nbInscriptionMax = $nbInscriptionMax;
 
@@ -151,29 +163,6 @@ class Sortie
         return $this;
     }
 
-    /**
-     * @return Collection<int, Participant>
-     */
-    public function getParticipationId(): Collection
-    {
-        return $this->participationId;
-    }
-
-    public function addParticipationId(Participant $participationId): static
-    {
-        if (!$this->participationId->contains($participationId)) {
-            $this->participationId->add($participationId);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipationId(Participant $participationId): static
-    {
-        $this->participationId->removeElement($participationId);
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, User>
