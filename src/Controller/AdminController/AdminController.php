@@ -35,6 +35,30 @@ class AdminController extends AbstractController
         return $this->render('Admin/createPlace.html.twig',['form' => $form->createView()]);
     }
 
+    #[Route(path: 'updatePlace/{id}', name: 'updatePlace')]
+    public function updatePlace(EntityManagerInterface $entityManager, Request $request, int $id){
+
+      $place = $entityManager->getRepository(Lieu::class)->find($id);
+
+        $form = $this->createForm(CreatePlaceType::class, $place);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($place);
+            $entityManager->flush();
+            return $this->redirectToRoute('admin_place');
+        }
+        return $this->render('Admin/createPlace.html.twig',['form' => $form->createView()]);
+    }
+    #[Route(path: 'deletePlace/{id}', name: 'deletePlace')]
+    public function deletePlace(EntityManagerInterface $entityManager,  int $id)
+    {
+        $place = $entityManager->getRepository(Lieu::class)->find($id);
+        $entityManager->remove($place);
+        $entityManager->flush();
+        return $this->redirectToRoute('admin_place');
+
+    }
+
 #[Route(path : 'site', name:'site')]
 public function getSites(EntityManagerInterface $entityManager){
 
@@ -58,4 +82,32 @@ public function getSites(EntityManagerInterface $entityManager){
         }
         return $this->render('Admin/createSite.html.twig',['form' => $form->createView()]);
     }
+
+    #[Route(path: 'updateSite/{id}', name: 'updateSite')]
+    public function updateSite(EntityManagerInterface $entityManager, Request $request, int $id){
+
+        $site = $entityManager->getRepository(Site::class)->find($id);
+
+        $form = $this->createForm(CreateSiteType::class, $site);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($site);
+            $entityManager->flush();
+            return $this->redirectToRoute('admin_site');
+        }
+        return $this->render('Admin/createSite.html.twig',['form' => $form->createView()]);
+    }
+
+    #[Route(path: 'deleteSite/{id}', name: 'deleteSite')]
+    public function deleteSite(EntityManagerInterface $entityManager,  int $id)
+    {
+    $site = $entityManager->getRepository(Site::class)->find($id);
+    $entityManager->remove($site);
+    $entityManager->flush();
+    return $this->redirectToRoute('admin_site');
+
+    }
+
+
+
 }

@@ -16,7 +16,7 @@
             <th scope="col">Latitude</th>
             <th scope="col">Longitude</th>
             {% if is_granted('ROLE_ADMIN') %}
-                <th scope="col">Supprimez</th>
+                <th scope="col">Supprimez/Modifier</th>
             {% endif %}
         </tr>
         </thead>
@@ -31,6 +31,9 @@
                 <td>  {{ place.rue }}</td>
                 <td>  {{ place.latitude }}</td>
                 <td>  {{ place.longitude }}</td>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <td> <button class="delete"><a href="{{ url('admin_deletePlace', {'id': place.id }) }}">Supprimer</a></button><button><a href="{{ url('admin_updatePlace', {'id': place.id}) }}">Modifier</a></button></td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

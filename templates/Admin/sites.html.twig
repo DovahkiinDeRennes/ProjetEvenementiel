@@ -4,7 +4,7 @@
 
 
 {% block body %}
-    <table >
+    <table>
         <thead>
         <tr>
             <th scope="col">#</th>
@@ -17,10 +17,12 @@
         <tbody>
         {% for site in sites %}
             <tr>
-                <th scope="row">{{ site.id }}</th>
+                <td scope="row">{{ site.id }}</td>
 
                 <td>{{ site.nom }}</td>
-
+                {% if is_granted('ROLE_ADMIN') %}
+                <td> <button class="delete"><a href="{{ url('admin_deleteSite', {'id': site.id }) }}">Supprimer</a></button><button><a href="{{ url('admin_updateSite', {'id': site.id}) }}">Modifier</a></button></td>
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>
