@@ -64,6 +64,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'organisateur')]
     private Collection $sortiesOrganisees;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $picture = null;
+
+
     public function __construct()
     {
         $this->sorties = new ArrayCollection();
@@ -263,6 +267,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): static
+    {
+        $this->picture = $picture;
+
+        return $this;
+    }
 
 
 

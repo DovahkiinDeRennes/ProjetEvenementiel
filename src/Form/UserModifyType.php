@@ -7,10 +7,12 @@ use App\Entity\Sortie;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class UserModifyType extends AbstractType
 {
@@ -30,7 +32,26 @@ class UserModifyType extends AbstractType
                 [
                     'type' =>
                     PasswordType::class, 'first_options' => ['label' => 'Mot de passe'], 'second_options' => ['label' => 'Confirmer le mot de passe']]) //, PasswordType::class, [PasswordType::class])
-
+            ->add('picture_file', FileType::class, [
+                'label' => 'Photo de profil (.jpeg, .jpg, .png)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/png',
+                        ],
+                        'maxSizeMessage' => 'Ce fichier est trop lourd',
+                        'mimeTypesMessage' => 'Le format est pas ok: (.jpeg, .jpg, .png)',
+                    ]),
+                ],
+                'row_attr' => [
+                    'class' => 'input-group mb-3'
+                ]
+            ])
 
 
         ;
