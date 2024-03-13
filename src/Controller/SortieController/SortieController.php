@@ -13,10 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/sortie')]
+#[Route('sortie', name: 'sortie_')]
 class SortieController extends AbstractController
 {
-    #[Route('/create', name: 'sortie_create', methods: ['GET', 'POST'])]
+    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $em): Response
     {
         $sortie = new Sortie();
@@ -41,6 +41,23 @@ class SortieController extends AbstractController
         ]);
     }
 
+    #[Route('update', name: 'update', methods: ['GET', 'POST'])]
+    public function update(Request $request, EntityManagerInterface $em): Response
+    {
 
+        return $this->redirectToRoute('home_home');
+    }
 
+    #[Route('detail', name: 'detail', methods: ['GET', 'POST'])]
+    public function detail(Request $request, EntityManagerInterface $em): Response
+    {
+
+        return $this->redirectToRoute('home_home');
+    }
+    #[Route('delete', name: 'delete', methods: ['GET', 'POST'])]
+    public function delete(Request $request, EntityManagerInterface $em): Response
+    {
+
+        return $this->redirectToRoute('home_home');
+    }
 }
