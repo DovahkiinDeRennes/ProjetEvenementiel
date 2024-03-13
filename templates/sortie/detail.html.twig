@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Détails de la sortie
+{% endblock %}
+
+{% block body %}
+    <h2>Détails de la sortie</h2>
+    {{ form_start(sortieForm) }}
+        {{ form_row(sortieForm.nom, { 'attr': {'readonly': 'readonly'} }) }}
+        {{ form_row(sortieForm.dateHeureDebut, { 'attr': {'readonly': 'readonly'} }) }}
+        {{ form_row(sortieForm.dateLimiteInscription, { 'attr': {'readonly': 'readonly'} }) }}
+        {{ form_row(sortieForm.nbInscriptionMax, { 'attr': {'readonly': 'readonly'} }) }}
+        {{ form_row(sortieForm.duree, { 'attr': {'readonly': 'readonly'} }) }}
+        {{ form_row(sortieForm.description, { 'attr': {'readonly': 'readonly'} }) }}
+        {{ form_row(sortieForm.lieuId, { 'attr': {'readonly': 'readonly'} }) }}
+        {{ form_rest(sortieForm) }}
+    {{ form_end(sortieForm) }}
+{% endblock %}

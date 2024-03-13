@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
+{% block title %}
+    Créer une sortie | {{ parent() }}
+{% endblock %}
 {% block body %}
     <h1>Créer une sortie</h1>
     <div>
         {{ form(sortieForm)}}
         <a href="{{ url('home_home') }}">Annuler</a>
     </div>
-{% endblock %}
-{% block title %}
-    Créer une sortie | {{ parent() }}
 {% endblock %}

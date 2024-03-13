@@ -40,7 +40,7 @@
                 <a href="{{ url('sortie_update') }}">Modifier</a>
                 <a href="">Publier</a>
                 {# Sinon #}
-                <a href="{{ url('sortie_detail') }}">Afficher</a>
+                <a href="{{ url('sortie_detail', {'id':sortie.id}) }}">Afficher</a>
                 {# endif #}
 
                 {# Si etat = ouvert ET id de la personne connectée = id sortie.organisateur  #}
