@@ -32,7 +32,8 @@
                 <td> {% if sortie.etatId  is not empty %}{{ sortie.etatId.libelle }} {% endif %}</td>
 
             <td></td>
-            <td>{{ sortie.organisateur.pseudo }}</td>
+            <td> {% if sortie.organisateur is not empty %}{{ sortie.organisateur.pseudo }} {% endif %}</td>
+
             <td>
 
                 {# si etat = création ET id de la personne connectée = id sortie.organisateur #}
