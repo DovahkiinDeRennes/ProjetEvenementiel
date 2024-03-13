@@ -76,7 +76,7 @@ class SortieController extends AbstractController
             $em->flush();
         }
 
-        return $this->render('home/home.html.twig');
+        return $this->redirectToRoute('home_home');
     }
 
     #[Route('update', name: 'update', methods: ['GET', 'POST'])]
