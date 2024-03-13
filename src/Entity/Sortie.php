@@ -55,6 +55,10 @@ class Sortie
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'sorties')]
     private Collection $users;
 
+    #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
+    private ?User $organisateur = null;
+
+
     public function __construct()
     {
         $this->participationId = new ArrayCollection();
@@ -114,12 +118,12 @@ class Sortie
         return $this;
     }
 
-    public function getNbInscriptionMax(): ?int
+    public function getNbInscriptionMax(): ?string
     {
         return $this->nbInscriptionMax;
     }
 
-    public function setNbInscriptionMax(int $nbInscriptionMax): static
+    public function setNbInscriptionMax(string $nbInscriptionMax): static
     {
         $this->nbInscriptionMax = $nbInscriptionMax;
 
@@ -164,6 +168,7 @@ class Sortie
     }
 
 
+
     /**
      * @return Collection<int, User>
      */
@@ -190,5 +195,17 @@ class Sortie
 
         return $this;
     }
+
+    public function getOrganisateur(): ?User
+    {
+        return $this->organisateur;
+    }
+
+    public function setOrganisateur(?User $organisateur): void
+    {
+        $this->organisateur = $organisateur;
+    }
+
+
 }
 

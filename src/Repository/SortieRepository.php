@@ -19,7 +19,21 @@ class SortieRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Sortie::class);
+
     }
+
+        public function findAllEvents(): array
+        {
+            $queryBuilder = $this->createQueryBuilder('event');
+            $queryBuilder->leftJoin('event.organisateur', 'organisateur')
+                ->addOrderBy('event.dateLimiteInscription', 'DESC');
+
+            $query = $queryBuilder->getQuery();
+
+            return  $query->getResult();
+
+       }
+
 
     //    /**
     //     * @return Sortie[] Returns an array of Sortie objects

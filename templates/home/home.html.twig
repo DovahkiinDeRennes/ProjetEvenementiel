@@ -21,7 +21,37 @@
         </tr>
         </thead>
         <tbody>
-        <tr></tr>
+        {% for sortie in sorties %}
+        <tr>
+            <td>{{ sortie.nom }}</td>
+            <td>{{ sortie.dateHeureDebut | date('Y-m-d') }}</td>
+            <td>{{ sortie.dateLimiteInscription | date('Y-m-d') }}</td>
+            <td>*/{{ sortie.nbInscriptionMax }}</td>
+            <td></td>
+            <td>{{ sortie.etatId }}</td>
+            <td>{{ sortie.organisateur.pseudo }}</td>
+            <td>
+                {# si etat = création ET id de la personne connectée = id sortie.organisateur #}
+                <a href="{{ url('sortie_update') }}">Modifier</a>
+                <a href="">Publier</a>
+                {# Sinon #}
+                <a href="{{ url('sortie_detail') }}">Afficher</a>
+                {# endif #}
+
+                {# Si etat = ouvert ET id de la personne connectée = id sortie.organisateur  #}
+                <a href="{{ url('sortie_delete') }}">Annuler</a>
+                {# endif #}
+
+                {#  Si d de la personne connectée != id sortie.organisateur #}
+                    {# Si inscrit #}
+                    <a href="{{ url('sortie_suscribe') }}">Se désister</a>
+                    {# sinon #}
+                    <a href="{{ url('sortie_unsuscribe') }}">S'inscrire</a>
+                    {# endif #}
+                {# endif #}
+            </td>
+        </tr>
+        {% endfor %}
         </tbody>
     </table>
     </div>
