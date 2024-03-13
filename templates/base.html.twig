@@ -10,37 +10,62 @@
         {{ importmap ('app') }}
     {% endblock %}
 </head>
+
+
+<body>
 <header>
-    <nav>
-        <ul>
-            {% if is_granted('ROLE_ADMIN') %}
-            <li>
-                <a href="{{ url('admin_place') }}">Gérer les lieux</a>
-            </li>
-            <li>
-                <a href="{{ url('admin_site') }}">Gérer les sites</a>
-            </li>
-            {% endif %}
-            <li>
-                <a href="{{ url('home_home') }}">Accueil</a>
-            </li>
-            <li>
-                {# <a href="{{ url('user_update', {'id': user.id }) }}">Modifier son compte</a> #}
-            </li>
-            {% if is_granted('IS_AUTHENTICATED') %}
-                <li>
-                    <a href="{{ path('app_logout') }}">Se déconnecter</a>
-                </li>
-            {% else%}
-                <li>
-                    <a href="{{ path('app_login') }}">Se connecter</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+    <div class="flex row pad ">
+        <div class="">
+            <a href="{{ '/' }}" class="">
+                <img src="{{ asset('images/imageSite.jpg') }}" class="image">
+            </a>
+        </div>
+        <div class="header-content ">
+
+            <div class="f">
+                <div class="flex">
+
+                    <h1 class="size">Les Assassymfonystes</h1>
+                </div>
+                <div class="row">
+                    <div class="flex">
+                        <nav>
+                            <ul>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li>
+                                        <a href="{{ url('admin_place') }}">Gérer les lieux</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url('admin_site') }}">Gérer les sites</a>
+                                    </li>
+                                {% endif %}
+                                <li>
+                                    <a href="{{ url('home_home') }}">Accueil</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="flex left-content pad3">
+        <nav>
+            <ul>
+                {% if is_granted('IS_AUTHENTICATED') %}
+                    <li><a href="{{ path('app_logout') }}">Se deconnecter</a></li>
+                {% else %}
+                    <li><a href="{{ path('app_login') }}">Se connecter</a></li>
+                    <li><a href="{{ path('app_register') }}">S'inscrire</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
 </header>
 <body>
-
 <div class="container">
     {% for label, messages in app.flashes %}
         {% for message in messages %}
@@ -50,14 +75,10 @@
         {% endfor %}
     {% endfor %}
 </div>
-
+<div class="pad2">
 {% block body %}
-
-
-
-
 {% endblock %}
-
+</div>
 </body>
 <footer>
 </footer>
