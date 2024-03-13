@@ -4,6 +4,7 @@ namespace App\Controller\SortieController;
 
 
 
+use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,8 +25,12 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            $etatId = $em->getRepository(Etat::class)->find(1);
+            $sortie->setEtatId($etatId);
+
             $em->persist($sortie);
             $em->flush();
+
 
             $this->addFlash('success', 'La sortie a bien été enregistrée.');
             return $this->redirectToRoute('home_home');
