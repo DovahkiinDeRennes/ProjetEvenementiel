@@ -4,10 +4,10 @@
 
 
 {% block body %}
-    <h2>Filtrer les sorties</h2>
 
-    <div>
-    <table>
+
+    <div class="style">
+    <table >
         <thead>
         <tr>
             <th>Nom de la sortie</th>
@@ -18,11 +18,12 @@
             <th>Inscrit</th>
             <th>Organisateur</th>
             <th>Actions</th>
+            <th>Actions Admin</th>
         </tr>
         </thead>
         <tbody>
         {% for sortie in sorties %}
-        <tr>
+        <tr class="test">
             <td>{{ sortie.nom }}</td>
             <td>{{ sortie.dateHeureDebut | date('Y-m-d') }}</td>
             <td>{{ sortie.dateLimiteInscription | date('Y-m-d') }}</td>
@@ -37,33 +38,35 @@
             <td>
 
                 {# si etat = création ET id de la personne connectée = id sortie.organisateur #}
-                <a href="{{ url('sortie_update',{'id':sortie.id}) }}">Modifier</a>
-                <a href="">Publier</a>
+                <button class="update"><a href="{{ url('sortie_update',{'id':sortie.id}) }}">Modifier</a></button>
+                <button class="publish"><a href="">Publier</a></button>
                 {# Sinon #}
-                <a href="{{ url('sortie_detail', {'id':sortie.id}) }}">Afficher</a>
+                <button class="detail"><a href="{{ url('sortie_detail', {'id':sortie.id}) }}">Afficher</a></button>
                 {# endif #}
 
                 {# Si etat = ouvert ET id de la personne connectée = id sortie.organisateur  #}
-                <a href="{{ url('sortie_delete') }}">Annuler</a>
+
                 {# endif #}
 
                 {#  Si d de la personne connectée != id sortie.organisateur #}
                     {# Si inscrit #}
 
-                <a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}">Se désister</a>
+                <button class="unsubscribe"><a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}">Se désister</a></button>
                     {# sinon #}
-                 <a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}">S'inscrire</a>
+                 <button class="subscribe"><a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}">S'inscrire</a></button>
                     {# endif #}
                 {# endif #}
 
             </td>
+            <td> <button class="delete"><a href="{{ url('sortie_delete') }}">Annuler</a></button></td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
-    </div>
+
     <div>
-        <a href="{{ url('sortie_create') }}"><input type="submit" value="Créer une sortie"></a>
+        <button class="ajout"><a href="{{ url('sortie_create') }}">Créer une sortie</a> </button>
+    </div>
     </div>
 {% endblock %}
 

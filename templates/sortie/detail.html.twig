@@ -37,7 +37,7 @@
 {#                <input id="sortie_nb_inscrits" type="number" value="{{ sortie.lieuId }}" disabled>#}
 {#            </div>#}
             <div>
-                <table></table>
+                <table>
                 {% for participant in sortie.users %}
                     <tr>
                         <td><a href="{{ url('user_detail', {'id':participant.id}) }}">{{ participant.pseudo }}</a></td>
