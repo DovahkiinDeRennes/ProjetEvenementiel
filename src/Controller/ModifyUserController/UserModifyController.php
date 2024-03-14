@@ -67,7 +67,7 @@ class UserModifyController extends AbstractController
     public function detail()
     {
         return $this->redirectToRoute('home_home');
-        //prouttttr
+        //prouttttrt
     }
 
 
