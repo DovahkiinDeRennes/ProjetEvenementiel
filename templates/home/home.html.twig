@@ -4,8 +4,9 @@
 
 
 {% block body %}
-
-
+    <div>
+        {{ form(searchForm) }}
+    </div>
     <div class="style">
     <table >
         <thead>
@@ -63,7 +64,6 @@
         {% endfor %}
         </tbody>
     </table>
-
     <div>
         <button class="ajout"><a href="{{ url('sortie_create') }}">Créer une sortie</a> </button>
     </div>

@@ -3,6 +3,7 @@
 namespace App\Controller\IndexController;
 
 use App\Entity\Sortie;
+use App\Form\SearchSortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +18,7 @@ class HomeController extends  AbstractController
     #[Route(path: '',name: 'home',methods:['GET'])]
     public function home(EntityManagerInterface $entityManager, SortieRepository $sortieRepository): Response
     {
-
+        $searchForm = $this->createForm(SearchSortieType::class);
 
         $sorties = $sortieRepository->findAllEvents();
 
@@ -29,7 +30,8 @@ class HomeController extends  AbstractController
 
         return $this->render('home/home.html.twig', [
             'sorties'=> $sorties,
-            'count' => $count
+            'count' => $count,
+            'searchForm'=> $searchForm
 
         ]);
     }

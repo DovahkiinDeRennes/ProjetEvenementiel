@@ -19,8 +19,6 @@ class UserModifyController extends AbstractController
 {
 
 
-
-
     #[Route(path: 'update/{id}', name: 'updateUser', methods: ['GET', 'POST'])]
     public function updateUser(Request $request,EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger,int $id): Response
     {
@@ -66,6 +64,7 @@ class UserModifyController extends AbstractController
     #[Route(path:'detail', name:'detail')]
     public function detail()
     {
+
         return $this->redirectToRoute('home_home');
         //prouttttrt
     }
