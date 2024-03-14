@@ -18,6 +18,29 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class UserModifyController extends AbstractController
 {
 
+    #[Route(path: 'list', name: 'list', methods: ['GET', 'POST'])]
+    public function list(EntityManagerInterface $entityManager): Response
+    {
+        $users = $entityManager->getRepository(User::class)->findAll();
+
+        return $this->render('User/userList.html.twig', ['users' => $users]);
+    }
+
+
+    #[Route(path: 'list/desac/{id}', name: 'desac', methods: ['GET', 'POST'])]
+    public function desac(EntityManagerInterface $entityManager,int $id): Response
+    {
+        $users = $entityManager->getRepository(User::class)->find($id);
+        $users->setActif(true);
+        $entityManager->persist($users);
+        $entityManager->flush();
+        return $this->redirectToRoute('user_list', ['users' => $users]);
+    }
+
+
+
+
+
 
 
 
@@ -67,7 +90,7 @@ class UserModifyController extends AbstractController
     public function detail()
     {
         return $this->redirectToRoute('home_home');
-        //prouttttrt
+
     }
 
 
