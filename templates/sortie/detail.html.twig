@@ -6,14 +6,47 @@
 
 {% block body %}
     <h2>Détails de la sortie</h2>
-    {{ form_start(sortieForm) }}
-        {{ form_row(sortieForm.nom, { 'attr': {'readonly': 'readonly'} }) }}
-        {{ form_row(sortieForm.dateHeureDebut, { 'attr': {'readonly': 'readonly'} }) }}
-        {{ form_row(sortieForm.dateLimiteInscription, { 'attr': {'readonly': 'readonly'} }) }}
-        {{ form_row(sortieForm.nbInscriptionMax, { 'attr': {'readonly': 'readonly'} }) }}
-        {{ form_row(sortieForm.duree, { 'attr': {'readonly': 'readonly'} }) }}
-        {{ form_row(sortieForm.description, { 'attr': {'readonly': 'readonly'} }) }}
-        {{ form_row(sortieForm.lieuId, { 'attr': {'readonly': 'readonly'} }) }}
-        {{ form_rest(sortieForm) }}
-    {{ form_end(sortieForm) }}
+    <form>
+        <div id="sortie">
+            <div>
+                <label for="sortie_nom">Nom</label>
+                <input id="sortie_nom" type="text" value="{{ sortie.nom }}" disabled>
+            </div>
+            <div>
+                <label for="sortie_date">Date et heure de la sortie</label>
+                <input id="sortie_date" type="datetime-local" value="{{ sortie.dateHeureDebut ? sortie.dateHeureDebut|date('Y-m-d H:i:s') : '' }}" disabled>
+            </div>
+            <div>
+                <label for="sortie_limite">Date limite d'inscription</label>
+                <input id="sortie_limite" type="datetime-local" value="{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('Y-m-d H:i:s') : '' }}" disabled>
+            </div>
+            <div>
+                <label for="sortie_duree">Durée</label>
+                <input id="sortie_duree" type="number" value="{{ sortie.duree }}" disabled>
+            </div>
+            <div>
+                <label for="sortie_nb_inscrits">Nombre de places</label>
+                <input id="sortie_nb_inscrits" type="number" value="{{ sortie.nbInscriptionMax }}" disabled>
+            </div>
+            <div>
+                <label for="sortie_nb_inscrits">Description</label>
+                <input id="sortie_nb_inscrits" type="number" value="{{ sortie.description }}" disabled>
+            </div>
+{#            <div>#}
+{#                <label for="sortie_nb_inscrits">Nombre de places</label>#}
+{#                <input id="sortie_nb_inscrits" type="number" value="{{ sortie.lieuId }}" disabled>#}
+{#            </div>#}
+            <div>
+                <table></table>
+                {% for participant in sortie.users %}
+                    <tr>
+                        <td><a href="{{ url('user_detail', {'id':participant.id}) }}">{{ participant.pseudo }}</a></td>
+                    </tr>
+                {% endfor %}
+                </table>
+            </div>
+
+
+        </div>
+    </form>
 {% endblock %}

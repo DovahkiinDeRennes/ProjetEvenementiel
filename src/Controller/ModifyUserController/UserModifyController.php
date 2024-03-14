@@ -4,6 +4,7 @@ namespace App\Controller\ModifyUserController;
 
 use App\Entity\User;
 use App\Form\UserModifyType;
+use ContainerQfwOdyb\getDoctrine_Orm_Validator_UniqueService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -21,45 +22,53 @@ class UserModifyController extends AbstractController
 
 
     #[Route(path: 'update/{id}', name: 'updateUser', methods: ['GET', 'POST'])]
-public function updateUser(Request $request,EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger,int $id): Response
-{
-$user = $entityManager->getRepository(User::class)->find($id);
-$form = $this->createForm(UserModifyType::class, $user);
-$form->handleRequest($request);
+    public function updateUser(Request $request,EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger,int $id): Response
+    {
+    $user = $entityManager->getRepository(User::class)->find($id);
+    $form = $this->createForm(UserModifyType::class, $user);
+    $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
-        if ($form->get('picture_file')->getData() instanceof UploadedFile) {
-            $pictureFile = $form->get('picture_file')->getData();
-            $fileName = $slugger->slug($user->getPseudo()) . '-' . uniqid() . '.' . $pictureFile->guessExtension();
-            $pictureFile->move($this->getParameter('picture_dir'), $fileName);
+            if ($form->get('picture_file')->getData() instanceof UploadedFile) {
+                $pictureFile = $form->get('picture_file')->getData();
+                $fileName = $slugger->slug($user->getPseudo()) . '-' . uniqid() . '.' . $pictureFile->guessExtension();
+                $pictureFile->move($this->getParameter('picture_dir'), $fileName);
 
-            if (!empty($user->getPicture())) {
-                $picturePath = $this->getParameter('picture_dir') . '/' . $user->getPicture();
-                if (file_exists($picturePath)) {
-                    unlink($picturePath);
+                if (!empty($user->getPicture())) {
+                    $picturePath = $this->getParameter('picture_dir') . '/' . $user->getPicture();
+                    if (file_exists($picturePath)) {
+                        unlink($picturePath);
+                    }
                 }
+
+                $user->setPicture($fileName);
             }
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('password')->getData()
+                )
+            );
 
-            $user->setPicture($fileName);
+            $entityManager->persist($user);
+            $entityManager->flush();
+         // dd($user);
+             return $this->redirectToRoute('home_home');
+
+
         }
-        $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                $user,
-                $form->get('password')->getData()
-            )
-        );
+        // }
 
-        $entityManager->persist($user);
-        $entityManager->flush();
-     // dd($user);
-         return $this->redirectToRoute('home_home');
-
-
+        return $this->render('User/UserModify.html.twig', ['form' => $form->createView(), 'user' => $user]);
     }
-    // }
 
-    return $this->render('User/UserModify.html.twig', ['form' => $form->createView(), 'user' => $user]);
-}
+    #[Route(path:'detail', name:'detail')]
+    public function detail()
+    {
+        return $this->redirectToRoute('home_home');
+    }
+
+
 
 }
