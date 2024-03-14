@@ -25,8 +25,15 @@ class SortieRepository extends ServiceEntityRepository
         public function findAllEvents(): array
         {
             $queryBuilder = $this->createQueryBuilder('event');
-            $queryBuilder->leftJoin('event.organisateur', 'organisateur')
+
+
+            $queryBuilder->leftJoin('event.users', 'user')
+                ->addSelect('user')
                 ->addOrderBy('event.dateLimiteInscription', 'DESC');
+            //$queryBuilder->leftJoin('event.organisateur', 'organisateur')
+              //  ->addSelect('organisateur')
+                //->addOrderBy('event.dateLimiteInscription', 'DESC');
+
 
             $query = $queryBuilder->getQuery();
 

@@ -6,6 +6,8 @@ use App\Entity\Lieu;
 use App\Entity\Site;
 use App\Form\CreatePlaceType;
 use App\Form\CreateSiteType;
+use App\Repository\LieuRepository;
+use App\Repository\SiteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,8 +17,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class AdminController extends AbstractController
 {
     #[Route(path: 'place', name: 'place')]
-    public function getPlaces(EntityManagerInterface $entityManager){
-        $places = $entityManager->getRepository(Lieu::class)->findAll();
+    public function getPlaces(LieuRepository $lieuRepository){
+
+        $places = $lieuRepository->findAllLieuVille();
         return $this->render('Admin/places.html.twig',compact('places'));
     }
 
@@ -60,9 +63,9 @@ class AdminController extends AbstractController
     }
 
 #[Route(path : 'site', name:'site')]
-public function getSites(EntityManagerInterface $entityManager){
+public function getSites(EntityManagerInterface $entityManager,SiteRepository $siteRepository){
 
-    $sites = $entityManager->getRepository(Site::class)->findAll();
+    $sites = $siteRepository->findAllSiteUser();
 
         return $this->render('Admin/sites.html.twig',compact('sites'));
 
