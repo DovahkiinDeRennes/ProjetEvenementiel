@@ -4,7 +4,6 @@ namespace App\Controller\ModifyUserController;
 
 use App\Entity\User;
 use App\Form\UserModifyType;
-use ContainerQfwOdyb\getDoctrine_Orm_Validator_UniqueService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
