@@ -79,8 +79,8 @@ class SortieController extends AbstractController
         return $this->redirectToRoute('home_home');
     }
 
-    #[Route('update', name: 'update', methods: ['GET', 'POST'])]
-    public function update(Request $request, EntityManagerInterface $em): Response
+    #[Route('update/{id}', name: 'update', methods: ['GET', 'POST'])]
+    public function update(Request $request, EntityManagerInterface $em,int $id): Response
     {
         $sortie = $em->getRepository(Sortie::class)->find($id);
         $form = $this->createForm(SortieType::class, $sortie);
