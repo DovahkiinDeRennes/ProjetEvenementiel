@@ -58,7 +58,7 @@
                 {# endif #}
 
             </td>
-            <td> <button class="delete"><a href="{{ url('sortie_delete') }}">Annuler</a></button></td>
+            <td> <button class="delete"><a href="{{ url('sortie_cancel', {'id': sortie.id }) }}">Annuler</a></button></td>
         </tr>
         {% endfor %}
         </tbody>
