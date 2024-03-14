@@ -106,7 +106,13 @@ class SortieController extends AbstractController
         $sortie = $em->getRepository(Sortie::class)->find($id);
         $form = $this->createForm(SortieType::class, $sortie);
 
-        return $this->redirectToRoute('home_home');
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($sortie);
+            $em->flush();
+            return $this->redirectToRoute('home_home');
+        }
+        return $this->render('sortie/update.html.twig', ['form' => $form->createView(), 'id' => $id ]);
     }
 
     #[Route('detail/{id}', name: 'detail', methods: ['GET', 'POST'])]
