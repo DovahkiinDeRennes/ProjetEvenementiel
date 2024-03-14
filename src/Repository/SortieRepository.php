@@ -30,6 +30,7 @@ class SortieRepository extends ServiceEntityRepository
             $queryBuilder->leftJoin('event.users', 'user')
                 ->addSelect('user')
                 ->addOrderBy('event.dateLimiteInscription', 'DESC');
+
             //$queryBuilder->leftJoin('event.organisateur', 'organisateur')
               //  ->addSelect('organisateur')
                 //->addOrderBy('event.dateLimiteInscription', 'DESC');

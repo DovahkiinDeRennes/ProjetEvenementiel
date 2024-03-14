@@ -32,6 +32,7 @@ class SortieController extends AbstractController
 
 
             $sortie->setOrganisateur($user);
+
             $etatId = $em->getRepository(Etat::class)->find(1);
             $sortie->setEtatId($etatId);
 
