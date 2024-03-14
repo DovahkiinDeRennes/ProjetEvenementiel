@@ -5,7 +5,7 @@
 
 {% block body %}
 
-
+<div class="style">
     <table >
         <thead>
         <tr>
@@ -16,7 +16,8 @@
             <th scope="col">Latitude</th>
             <th scope="col">Longitude</th>
             {% if is_granted('ROLE_ADMIN') %}
-                <th scope="col">Supprimez/Modifier</th>
+                <th scope="col">Supprimez</th>
+                <th scope="col">Modifier</th>
             {% endif %}
         </tr>
         </thead>
@@ -32,14 +33,15 @@
                 <td>  {{ place.latitude }}</td>
                 <td>  {{ place.longitude }}</td>
                 {% if is_granted('ROLE_ADMIN') %}
-                    <td> <button class="delete"><a href="{{ url('admin_deletePlace', {'id': place.id }) }}">Supprimer</a></button><button><a href="{{ url('admin_updatePlace', {'id': place.id}) }}">Modifier</a></button></td>
+                    <td> <button class="delete"><a href="{{ url('admin_deletePlace', {'id': place.id }) }}">Supprimer</a></button></td>
+                    <td><button class="update"><a href="{{ url('admin_updatePlace', {'id': place.id}) }}">Modifier</a></button></td>
                 {% endif %}
             </tr>
         {% endfor %}
         </tbody>
     </table>
-    <a href="{{ url('admin_createPlace') }}">Ajouter</a>
-
+    <button class="ajout"><a href="{{ url('admin_createPlace') }}">Ajouter</a></button>
+</div>
 {% endblock %}
 
 {% block js %}
