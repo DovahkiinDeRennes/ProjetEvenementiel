@@ -58,6 +58,9 @@ class Sortie
     #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
     private ?User $organisateur = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Motif = null;
+
 
     public function __construct()
     {
@@ -204,6 +207,18 @@ class Sortie
     public function setOrganisateur(?User $organisateur): void
     {
         $this->organisateur = $organisateur;
+    }
+
+    public function getMotif(): ?string
+    {
+        return $this->Motif;
+    }
+
+    public function setMotif(string $Motif): static
+    {
+        $this->Motif = $Motif;
+
+        return $this;
     }
 
 

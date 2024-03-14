@@ -7,6 +7,7 @@ namespace App\Controller\SortieController;
 use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Entity\User;
+use App\Form\CancelSortieType;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -118,10 +119,25 @@ class SortieController extends AbstractController
         ]);
     }
 
-    #[Route('delete', name: 'delete', methods: ['GET', 'POST'])]
-    public function delete(Request $request, EntityManagerInterface $em): Response
+    #[Route('cancel/{id}', name: 'cancel', methods: ['GET', 'POST'])]
+    public function cancel(Request $request, EntityManagerInterface $em, int $id): Response
     {
+        $sorties = $em->getRepository(Sortie::class)->find($id);
+        $form = $this->createForm(CancelSortieType::class, $sorties);
 
-        return $this->redirectToRoute('home_home');
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()){
+            $etatId = $em->getRepository(Etat::class)->find(2);
+            $sorties->setEtatId($etatId);
+            $em->persist($sorties);
+            $em->flush();
+
+            return $this->redirectToRoute('home_home');
+        }
+        return $this->render('sortie/cancel.html.twig', [
+            'form' => $form ->createView(),
+            'sorties' => $sorties
+        ]);
     }
 }
