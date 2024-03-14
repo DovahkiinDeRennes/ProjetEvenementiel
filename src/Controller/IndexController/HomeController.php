@@ -4,6 +4,7 @@ namespace App\Controller\IndexController;
 
 use App\Entity\Sortie;
 use App\Form\SearchSortieType;
+use App\Entity\User;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,21 +33,27 @@ class HomeController extends  AbstractController
                 'sorties' => $sorties
             ]);
         }
+        
+        
+        $userId = $this->getUser()->getId();
+        $user = $entityManager->getRepository(User::class)->find($userId);
 
+        if ($user && !$user->getActif()) {
+            $sorties = $sortieRepository->findAllEvents();
 
-        $sorties = $sortieRepository->findAllEvents();
-
-        $count = [];
-        foreach ($sorties as $sortie) {
-            $count[$sortie->getId()] = $sortie->getUsers()->count();
-        }
+            $count = [];
+            foreach ($sorties as $sortie) {
+                $count[$sortie->getId()] = $sortie->getUsers()->count();
+            }
 
 
         return $this->render('home/home.html.twig', [
             'sorties'=> $sorties,
             'count' => $count,
             'searchForm'=> $searchForm
-
         ]);
+        } else {
+            return $this->render('user/actif.html.twig');
+        }
     }
 }
