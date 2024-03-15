@@ -71,9 +71,10 @@ class UserModifyController extends AbstractController
                         unlink($picturePath);
                     }
                 }
-
+            // on rajoute le nouveau nom de l'image dans la bdd
                 $user->setPicture($fileName);
             }
+            // on hash le mot de passe
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,

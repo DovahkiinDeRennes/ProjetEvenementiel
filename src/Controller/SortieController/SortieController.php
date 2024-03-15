@@ -144,7 +144,7 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted()){
-            // si submit alors en set un état qu'on récupère avec l'id
+            // si submit alors on set un état qu'on récupère avec l'id
             $etatId = $em->getRepository(Etat::class)->find(2);
             $sorties->setEtatId($etatId);
             $em->persist($sorties);
