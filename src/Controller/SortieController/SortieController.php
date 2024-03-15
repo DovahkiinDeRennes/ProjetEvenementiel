@@ -35,28 +35,66 @@ class SortieController extends AbstractController
 
         // si le formulaire est envoyé
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-
+            if ($request->request->has('draft')) {
+                $etatId = $em->getRepository(Etat::class)->find(3); // ID de l'état "Brouillon"
+            } elseif ($request->request->has('publish')) {
+                $etatId = $em->getRepository(Etat::class)->find(4); // ID de l'état "Publié"
+            }
             //Définir l'utilisateur organisateur AVEC LA CLASSE SECURITY UP UP UP UP UP (retrouve le $user pour comprendre, ligne 27)
             $sortie->setOrganisateur($user);
 
-            // Je prend le 1er etat de sortie (dans la base de donnée)
-            $etatId = $em->getRepository(Etat::class)->find(1);
-            // Je set l'etat avec la fonction setEtatId
-            $sortie->setEtatId($etatId);
 
-            $em->persist($sortie);
 
-            $em->flush();
+               // Je prend le 1er etat de sortie (dans la base de donnée)
 
-            // message d'alerte
-            $this->addFlash('success', 'La sortie a bien été enregistrée.');
-            return $this->redirectToRoute('home_home');
+               // Je set l'etat avec la fonction setEtatId
+               $sortie->setEtatId($etatId);
+
+               $em->persist($sortie);
+
+               $em->flush();
+
+               // message d'alerte
+               $this->addFlash('success', 'La sortie a bien été enregistrée.');
+               return $this->redirectToRoute('home_home');
+
         }
+
+
+
         // Pour acceder à la page
         return $this->render('sortie/create.html.twig', [
             'sortieForm' => $sortieForm
         ]);
     }
+
+    #[Route('newEtat/{id}', name: 'newEtat', methods: ['GET', 'POST'])]
+    public function newEtat(Request $request, EntityManagerInterface $em,int $id): Response
+    {
+        $sortie = $em->getRepository(Sortie::class)->find($id);
+
+        $userId = $this->getUser()->getId();
+
+        $organisateur = $sortie->getOrganisateur();
+
+        if($organisateur->getId() == $userId){
+            if( $sortie->getEtatId()->getId() == 3){
+                $etatId = $em->getRepository(Etat::class)->find(4); // ID de l'état "Publié"
+
+                $sortie->setEtatId($etatId);
+                $em->persist($sortie);
+
+                $em->flush();
+            }
+        }
+        // Récupérer la sortie avec son id
+
+
+
+        return $this->redirectToRoute('home_home');
+    }
+
+
 
 
     #[Route('suscribe/{id}', name: 'suscribe', methods: ['GET', 'POST'])]
@@ -72,10 +110,30 @@ class SortieController extends AbstractController
         $user = $em->getRepository(User::class)->find($userId);
 
         // Ajouter la sortie a l'utilisateur (c'est une méthode de quoicoubeh? nan je rigole de l' Entity User)
-        if ($user->getSorties()){
-            $user->addSorty($sortie);
-            $em->flush();
+        // On verifie l'etat + la date de cloture
+
+     //  $prout = new \DateTimeImmutable('now' , new \DateTimeZone('Europe/Paris')) = null, calendar = "gregorian", locale = null);
+        $dateActuelle = new \DateTime('now' , new \DateTimeZone('Europe/Paris'));
+        $dateDebut = $sortie->getDateHeureDebut();
+
+        if ($dateActuelle < $dateDebut && $sortie->getEtatId()->getId() == 4) {
+            if (!$user->getSorties()) { // Vérifie si l'utilisateur n'a pas déjà des sorties
+                $this->addFlash('error', 'Vous êtes déjà inscrit à une sortie.');
+            } else {
+                $user->addSorty($sortie);
+                $em->flush();
+                $this->addFlash('success', 'Vous êtes inscrit à cette sortie.');
+
+            }
+        } else {
+            $this->addFlash('error', 'Les inscriptions sont terminées pour cette sortie.');
         }
+
+
+
+
+
+
 
         return $this->redirectToRoute('home_home');
     }
@@ -92,11 +150,12 @@ class SortieController extends AbstractController
         $user = $em->getRepository(User::class)->find($userId);
 
         // devine ça fait quoi ça???? allez 1, 2, 3, flop.... la fonction removeSorty dans ENTITY User (le contraire de addSorty)
-        if ($user->getSorties()){
-            $user->removeSorty($sortie);
-            $em->flush();
-        }
+        // On verifie l'etat + la date de cloture
 
+                if ($user->getSorties()) {
+                    $user->removeSorty($sortie);
+                    $em->flush();
+        }
         return $this->redirectToRoute('home_home');
     }
 
