@@ -32,7 +32,7 @@ class SortieRepository extends ServiceEntityRepository
                 ->addOrderBy('event.dateLimiteInscription', 'DESC');
 
             //$queryBuilder->leftJoin('event.organisateur', 'organisateur')
-              //  ->addSelect('organisateur')
+                //->addSelect('organisateur')
                 //->addOrderBy('event.dateLimiteInscription', 'DESC');
 
 
@@ -40,6 +40,21 @@ class SortieRepository extends ServiceEntityRepository
 
             return  $query->getResult();
 
+       }
+
+       public function filterEvent($formData): array
+       {
+           $queryBuilder = $this->createQueryBuilder('event');
+           $queryBuilder->leftJoin('event.users', 'user')
+               ->addSelect('user');
+
+           $queryBuilder->where('event.nom LIKE :nom');
+
+           $queryBuilder->setParameter('nom', '%'.$formData['nom'].'%');
+
+           $query = $queryBuilder->getQuery();
+
+           return $query->getResult();
        }
 
 

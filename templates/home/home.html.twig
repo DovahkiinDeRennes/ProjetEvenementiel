@@ -4,8 +4,52 @@
 
 
 {% block body %}
+    <div>
+        {{ form_start(searchForm) }}
 
+        <div>
+            {{ form_label(searchForm.site) }}
+            {{ form_widget(searchForm.site) }}
+            {{ form_errors(searchForm.site) }}
+        </div>
+        <div>
+            {{ form_label(searchForm.nom) }}
+            {{ form_widget(searchForm.nom) }}
+            {{ form_errors(searchForm.nom) }}
+        </div>
+        <div>
+            {{ form_label(searchForm.date_one) }}
+            {{ form_widget(searchForm.date_one) }}
+            {{ form_errors(searchForm.date_one) }}
+        </div>
+        <div>
+            {{ form_label(searchForm.date_two) }}
+            {{ form_widget(searchForm.date_two) }}
+            {{ form_errors(searchForm.date_two) }}
+        </div>
+        <div>
+            {{ form_widget(searchForm.sorties_orga) }}
+            {{ form_label(searchForm.sorties_orga) }}
+            {{ form_errors(searchForm.sorties_orga) }}
+        </div>
+        <div>
 
+            {{ form_widget(searchForm.sorties_inscrit) }}
+            {{ form_label(searchForm.sorties_inscrit) }}
+            {{ form_errors(searchForm.sorties_inscrit) }}
+        </div>
+        <div>
+            {{ form_widget(searchForm.sorties_nonInscrit) }}
+            {{ form_label(searchForm.sorties_nonInscrit) }}
+            {{ form_errors(searchForm.sorties_nonInscrit) }}
+        </div>
+        <div>
+            {{ form_widget(searchForm.sorties_passees) }}
+            {{ form_label(searchForm.sorties_passees) }}
+            {{ form_errors(searchForm.sorties_passees) }}
+        </div>
+        {{ form_end(searchForm) }}
+    </div>
     <div class="style">
     <table >
         <thead>
@@ -63,7 +107,6 @@
         {% endfor %}
         </tbody>
     </table>
-
     <div>
         <button class="ajout"><a href="{{ url('sortie_create') }}">Créer une sortie</a> </button>
     </div>
