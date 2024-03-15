@@ -56,9 +56,13 @@
             <ul>
                 {% if is_granted('IS_AUTHENTICATED') %}
                     <li><a href="{{ path('app_logout') }}">Se deconnecter</a></li>
+                    {% if app.user.picture %}
+                        <li><a href="{{ url('user_updateUser', {'id': app.user.id }) }}"><img  src="{{ asset('uploads/' ~ app.user.picture) }}" alt="Photo de profil" class="image"></a></li>
+                    {% endif %}
                 {% else %}
                     <li><a href="{{ path('app_login') }}">Se connecter</a></li>
                     <li><a href="{{ path('app_register') }}">S'inscrire</a></li>
+
                 {% endif %}
             </ul>
         </nav>
