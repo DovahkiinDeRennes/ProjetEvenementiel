@@ -37,6 +37,7 @@ class HomeController extends  AbstractController
             return $this->render('user/actif.html.twig');
         }
     }
+    // TEST POUR RECUP LES FICHIERS
 }
 
 

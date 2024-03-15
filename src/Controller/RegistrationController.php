@@ -63,4 +63,5 @@ class RegistrationController extends AbstractController
             'registrationForm' => $form,
         ]);
     }
+    // TEST POUR RECUP LES FICHIERS
 }

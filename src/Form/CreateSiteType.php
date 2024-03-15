@@ -24,4 +24,5 @@ class CreateSiteType extends AbstractType
             'data_class' => Site::class,
         ]);
     }
+    // TEST POUR RECUP LES FICHIERS
 }

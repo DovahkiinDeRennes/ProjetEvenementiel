@@ -36,4 +36,5 @@ class ResetPasswordRequest implements ResetPasswordRequestInterface
     {
         return $this->user;
     }
+    // TEST POUR RECUP LES FICHIERS
 }
