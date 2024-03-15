@@ -13,7 +13,7 @@
 
 
 <body>
-<header>
+<header class="margB45">
     <div class="flex row pad ">
         <div class="">
             <a href="{{ '/' }}" class="">
@@ -79,13 +79,16 @@
         {% endfor %}
     {% endfor %}
 </div>
-<div class="pad2">
+<div class="style">
 {% block body %}
 {% endblock %}
 </div>
 </body>
-<footer>
+<footer class="margT45">
+    <div class="footer-content">©Les Assassymfonystes</div>
 </footer>
+
+
 {% block js %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
