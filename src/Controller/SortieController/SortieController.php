@@ -36,10 +36,10 @@ class SortieController extends AbstractController
         // si le formulaire est envoyé
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
-         //Définir l'utilisateur organisateur AVEC LA CLASSE SECURITY UP UP UP UP UP (retrouve le $user pour comprendre, ligne 27)
+            //Définir l'utilisateur organisateur AVEC LA CLASSE SECURITY UP UP UP UP UP (retrouve le $user pour comprendre, ligne 27)
             $sortie->setOrganisateur($user);
 
-         // Je prend le 1er etat de sortie (dans la base de donnée)
+            // Je prend le 1er etat de sortie (dans la base de donnée)
             $etatId = $em->getRepository(Etat::class)->find(1);
             // Je set l'etat avec la fonction setEtatId
             $sortie->setEtatId($etatId);
@@ -48,7 +48,7 @@ class SortieController extends AbstractController
 
             $em->flush();
 
-        // message d'alerte
+            // message d'alerte
             $this->addFlash('success', 'La sortie a bien été enregistrée.');
             return $this->redirectToRoute('home_home');
         }
@@ -71,7 +71,7 @@ class SortieController extends AbstractController
         // Récupère l'utilisateur connecte avec son id
         $user = $em->getRepository(User::class)->find($userId);
 
-     // Ajouter la sortie a l'utilisateur (c'est une méthode de quoicoubeh? nan je rigole de l' Entity User)
+        // Ajouter la sortie a l'utilisateur (c'est une méthode de quoicoubeh? nan je rigole de l' Entity User)
         if ($user->getSorties()){
             $user->addSorty($sortie);
             $em->flush();
@@ -144,7 +144,7 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if($form->isSubmitted()){
-            // si submit alors en set un état qu'on récupère avec l'id
+            // si submit alors on set un état qu'on récupère avec l'id
             $etatId = $em->getRepository(Etat::class)->find(2);
             $sorties->setEtatId($etatId);
             $em->persist($sorties);

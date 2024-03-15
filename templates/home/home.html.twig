@@ -4,7 +4,7 @@
 
 
 {% block body %}
-    <div>
+    {# <div>
         {{ form_start(searchForm) }}
 
         <div>
@@ -49,67 +49,67 @@
             {{ form_errors(searchForm.sorties_passees) }}
         </div>
         {{ form_end(searchForm) }}
-    </div>
+    </div> #}
     <div class="style">
-    <table >
-        <thead>
-        <tr>
-            <th>Nom de la sortie</th>
-            <th>Date de la sortie</th>
-            <th>Clôture</th>
-            <th>Inscrits/Places</th>
-            <th>Etat</th>
-            <th>Inscrit</th>
-            <th>Organisateur</th>
-            <th>Actions</th>
-            <th>Actions Admin</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for sortie in sorties %}
-        <tr class="test">
-            <td>{{ sortie.nom }}</td>
-            <td>{{ sortie.dateHeureDebut | date('Y-m-d') }}</td>
-            <td>{{ sortie.dateLimiteInscription | date('Y-m-d') }}</td>
-            <td>*/{{ sortie.nbInscriptionMax }}</td>
+        <table >
+            <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>Inscrits/Places</th>
+                <th>Etat</th>
+                <th>Inscrit</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+                <th>Actions Admin</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sortie in sorties %}
+                <tr class="test">
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.dateHeureDebut | date('Y-m-d') }}</td>
+                    <td>{{ sortie.dateLimiteInscription | date('Y-m-d') }}</td>
+                    <td>*/{{ sortie.nbInscriptionMax }}</td>
 
 
-                <td> {% if sortie.etatId  is not empty %}{{ sortie.etatId.libelle }} {% endif %}</td>
+                    <td> {% if sortie.etatId  is not empty %}{{ sortie.etatId.libelle }} {% endif %}</td>
 
-            <td> {{ count[sortie.id] }}</td>
-            <td> {% if sortie.organisateur is not empty %}{{ sortie.organisateur.pseudo }} {% endif %}</td>
+                    <td> {{ count[sortie.id] }}</td>
+                    <td> {% if sortie.organisateur is not empty %}{{ sortie.organisateur.pseudo }} {% endif %}</td>
 
-            <td>
+                    <td>
 
-                {# si etat = création ET id de la personne connectée = id sortie.organisateur #}
-                <button class="update"><a href="{{ url('sortie_update',{'id':sortie.id}) }}">Modifier</a></button>
-                <button class="publish"><a href="">Publier</a></button>
-                {# Sinon #}
-                <button class="detail"><a href="{{ url('sortie_detail', {'id':sortie.id}) }}">Afficher</a></button>
-                {# endif #}
+                        {# si etat = création ET id de la personne connectée = id sortie.organisateur #}
+                        <button class="update"><a href="{{ url('sortie_update',{'id':sortie.id}) }}">Modifier</a></button>
+                        <button class="publish"><a href="">Publier</a></button>
+                        {# Sinon #}
+                        <button class="detail"><a href="{{ url('sortie_detail', {'id':sortie.id}) }}">Afficher</a></button>
+                        {# endif #}
 
-                {# Si etat = ouvert ET id de la personne connectée = id sortie.organisateur  #}
+                        {# Si etat = ouvert ET id de la personne connectée = id sortie.organisateur  #}
 
-                {# endif #}
+                        {# endif #}
 
-                {#  Si d de la personne connectée != id sortie.organisateur #}
-                    {# Si inscrit #}
+                        {#  Si d de la personne connectée != id sortie.organisateur #}
+                        {# Si inscrit #}
 
-                <button class="unsubscribe"><a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}">Se désister</a></button>
-                    {# sinon #}
-                 <button class="subscribe"><a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}">S'inscrire</a></button>
-                    {# endif #}
-                {# endif #}
+                        <button class="unsubscribe"><a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}">Se désister</a></button>
+                        {# sinon #}
+                        <button class="subscribe"><a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}">S'inscrire</a></button>
+                        {# endif #}
+                        {# endif #}
 
-            </td>
-            <td> <button class="delete"><a href="{{ url('sortie_cancel', {'id': sortie.id }) }}">Annuler</a></button></td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div>
-        <button class="ajout"><a href="{{ url('sortie_create') }}">Créer une sortie</a> </button>
-    </div>
+                    </td>
+                    <td> <button class="delete"><a href="{{ url('sortie_cancel', {'id': sortie.id }) }}">Annuler</a></button></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            <button class="ajout"><a href="{{ url('sortie_create') }}">Créer une sortie</a> </button>
+        </div>
     </div>
 {% endblock %}
 
