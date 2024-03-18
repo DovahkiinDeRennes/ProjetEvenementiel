@@ -26,20 +26,31 @@ class MiseAjourSortie
         // Date actuelle
         $dateActuelle = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
 
+
         // Parcourir toutes les sorties
         foreach ($sorties as $sortie) {
+            // Récupérer la date de début de la sortie actuelle
             $dateDebut = $sortie->getDateHeureDebut();
+            $interval = new \DateInterval('P30D');
 
+            $dateFin = clone $dateDebut;
+            $dateFin->add($interval);
             // Vérifier si la date de début de la sortie est passée
-            if ($dateActuelle >= $dateDebut) {
+            if ($dateActuelle > $dateDebut) {
+
                 // Changer l'état de la sortie en fonction de vos règles métier
-                $etatId  = 5;
+                $etatId = 5;
                 $etat = $this->etatRepository->find($etatId);
                 $sortie->setEtatId($etat);
             }
-        }
+                if ($dateActuelle >= $dateFin) {
+                $etatId = 6; // ID de l'état correspondant
+                $etat = $this->etatRepository->find($etatId);
+                $sortie->setEtatId($etat);
+            }
 
-        // Enregistrer les modifications dans la base de données
-        $this->entityManager->flush();
+            // Enregistrer les modifications dans la base de données
+            $this->entityManager->flush();
+        }
     }
 }
