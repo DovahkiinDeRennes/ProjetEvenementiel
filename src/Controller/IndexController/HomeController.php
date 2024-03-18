@@ -44,7 +44,6 @@ class HomeController extends  AbstractController
                     //dd($formData);
                     //dd($userId);
                     $sortiesToDisplay = $sortieRepository->filterEvent($formData, $userId);
-                    dd($sortiesToDisplay);
                 }
 
                 // Compte inscrits/sortie

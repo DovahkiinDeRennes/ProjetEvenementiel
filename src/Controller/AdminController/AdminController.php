@@ -4,14 +4,24 @@ namespace App\Controller\AdminController;
 
 use App\Entity\Lieu;
 use App\Entity\Site;
+use App\Entity\User;
 use App\Form\CreatePlaceType;
 use App\Form\CreateSiteType;
+use App\Form\RegistrationFormType;
+use App\Form\RegistrationUserFormType;
+use App\Form\UserModifyType;
 use App\Repository\LieuRepository;
 use App\Repository\SiteRepository;
+use App\Security\AppAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route(path: 'admin/', name: 'admin_')]
 class AdminController extends AbstractController
@@ -121,6 +131,60 @@ class AdminController extends AbstractController
 
     }
 
+    #[Route(path : 'registerUser', name:'registerUser', methods: ['GET', 'POST'])]
+    public function registerUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    {
+        if($security->getUser()->getRoles()[0] === 'ROLE_ADMIN'){
+            $user = new User();
+            $form = $this->createForm(RegistrationUserFormType::class, $user);
 
-// TEST POUR RECUP LES FICHIERS
+            $form->handleRequest($request);
+
+
+            if ($form->isSubmitted()) {
+
+                $user->setActif(0);
+                $user->setRoles(['ROLE_USER']);
+                // encode the plain password
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+                );
+
+
+                if ($form->get('picture_file')->getData() instanceof UploadedFile) {
+                    $pictureFile = $form->get('picture_file')->getData();
+                    $fileName = $slugger->slug($user->getPseudo()) . '-' . uniqid() . '.' . $pictureFile->guessExtension();
+                    $pictureFile->move($this->getParameter('picture_dir'), $fileName);
+
+                    if (!empty($user->getPicture())) {
+                        $picturePath = $this->getParameter('picture_dir') . '/' . $user->getPicture();
+                        if (file_exists($picturePath)) {
+                            unlink($picturePath);
+                        }
+                    }
+
+                    $user->setPicture($fileName);
+                }
+
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                // do anything else you need here, like send an email
+
+                return $this->redirectToRoute('user_list', ['users' => $user]);
+
+            }
+
+            return $this->render('/admin/registerUser.html.twig', [
+                'form' => $form->createView(),
+            ]);
+        }
+        else{
+            return $this->render('User/non.html.twig');
+        }
+    }
 }
