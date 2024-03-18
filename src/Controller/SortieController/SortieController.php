@@ -124,23 +124,27 @@ class SortieController extends AbstractController
         } else {
             $dateActuelle = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
             $dateDebut = $sortie->getDateHeureDebut();
-            $nombreInscriptionsUtilisateur = count($user->getSorties());
+            $utilisateursInscrits = $sortie->getUsers();
 
-            if ($nombreInscriptionsUtilisateur >= $sortie->getNbInscriptionMax()) {
+            $nombreInscriptions = count($utilisateursInscrits);
+
+            $utilisateursInscrits = $sortie->getUsers();
+            $utilisateursInscrits->initialize(); // Initialisation de la collection
+
+
+            if ($nombreInscriptions >= $sortie->getNbInscriptionMax()) {
                 $this->addFlash('error', 'Les inscriptions sont aux maximum de leurs capacités.');
-            } elseif ($dateActuelle >= $dateDebut || $sortie->getEtatId()->getId() != 4) {
+            } elseif ($dateActuelle >= $dateDebut && $sortie->getEtatId()->getId() != 4) {
                 $this->addFlash('error', 'Les inscriptions sont terminées pour cette sortie.');
+            } elseif ($utilisateursInscrits->contains($user)) {
+                $this->addFlash('error', 'Vous êtes déjà inscrit à cette sortie.');
             } else {
-                if  ($user->getSorties()->contains($sortie)) {
-                    $this->addFlash('error', 'Vous êtes déjà inscrit à une sortie.');
-                } else {
-                    $user->addSorty($sortie);
-                    $em->flush();
-                    $this->addFlash('success', 'Vous êtes inscrit à cette sortie.');
-                }
+                $user->addSorty($sortie);
+                $em->flush();
+                $this->addFlash('success', 'Vous êtes inscrit à cette sortie.');
             }
-        }
 
+        }
         return $this->redirectToRoute('home_home');
     }
 
