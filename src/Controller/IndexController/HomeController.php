@@ -41,10 +41,9 @@ class HomeController extends  AbstractController
                 // POST du formulaire de recherche
                 if ($searchForm->isSubmitted()) {
                     $formData = $searchForm->getData();
-                    //dd($formData);
-                    //dd($userId);
+                    //dd($formData['date_two']);
                     $sortiesToDisplay = $sortieRepository->filterEvent($formData, $userId);
-                    dd($sortiesToDisplay);
+                    //dd($sortiesToDisplay);
                 }
 
                 // Compte inscrits/sortie

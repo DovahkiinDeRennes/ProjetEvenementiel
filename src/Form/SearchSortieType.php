@@ -19,7 +19,7 @@ class SearchSortieType extends AbstractType
         $builder->setMethod('GET')
             ->add('site', EntityType::class,[
                 'class'=>Site::class,
-                'choice_label' => 'Site'
+                'choice_label' => 'nom'
             ] )
             ->add('nom', TextType::class, [
                 'required'=> false

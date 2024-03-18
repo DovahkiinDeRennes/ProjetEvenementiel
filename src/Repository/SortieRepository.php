@@ -46,40 +46,39 @@ class SortieRepository extends ServiceEntityRepository
        public function filterEvent(array $formData, $userId): array
        {
            $queryBuilder = $this->createQueryBuilder('event')
-                ->join('event.users', 'users')
-                ->join('event.etatId', 'etat')
-                ->join('event.lieuId', 'site')
+                ->leftjoin('event.users', 'users')
+                ->leftjoin('event.etatId', 'etat')
+                ->leftJoin('event.site', 'site')
            ->addSelect('event');
-
 
 
            if(!empty($formData['nom'])){
                $queryBuilder->where('event.nom LIKE :nom')
                    ->setParameter('nom', '%'.$formData['nom'].'%');
+               //dd($queryBuilder->getQuery()->getResult());
            }
 
            if(!empty($formData['site'])){
-               $queryBuilder->andWhere('event.lieuId LIKE :site')
+               $queryBuilder->andWhere('event.site = :site')
                    ->setParameter('site', $formData['site']);
            }
 
            if(!empty($formData['date_one'])){
+               $dateDebut = $formData['date_one']->setTime(0,0,0);
                $queryBuilder->andWhere('event.dateHeureDebut >= :dateHeureDebut')
-               ->setParameter('dateHeureDebut', $formData['date_one'] );
+               ->setParameter('dateHeureDebut', $dateDebut  );
            }
 
            if(!empty($formData['date_two'])){
-           $queryBuilder->andWhere('event.dateLimiteInscription <= :dateLimiteInscription')
-               ->setParameter('dateLimiteInscription', $formData['date_two'] );
+               $dateFin = $formData['date_two']->setTime(23,59,59);
+               $queryBuilder->andWhere('event.dateLimiteInscription <= :dateLimiteInscription')
+               ->setParameter('dateLimiteInscription', $dateFin );
            }
 
            //filtre si personne connectée = id  de l'organisateur
            if(!empty($formData['sorties_orga'])){
-               //dd($formData['sorties_orga']);
-               //dd($queryBuilder->getQuery()->getResult());
                $queryBuilder->andWhere('event.organisateur = :userId')
                    ->setParameter('userId', $userId);
-               //dd($queryBuilder->getQuery()->getSQL());
            }
 
            //filtre si on trouve dans les id des participants l'id de la personne connectée
@@ -96,7 +95,7 @@ class SortieRepository extends ServiceEntityRepository
 
            //filtre si etat de la sortie = passee
            if(!empty($formData['sorties_passees'])){
-               $queryBuilder->andWhere("event.etat = 'Passée' ");
+               $queryBuilder->andWhere("event.etatId = 5 ");
            }
 
 

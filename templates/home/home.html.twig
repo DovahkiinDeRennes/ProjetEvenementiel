@@ -49,13 +49,14 @@
             {{ form_errors(searchForm.sorties_passees) }}
         </div>
         {{ form_end(searchForm) }}
-    </div> #}
+    </div>
     <div class=" pad ">
         <table class="">
             <thead>
             <tr>
                 <th>Nom de la sortie</th>
                 <th>Date de la sortie</th>
+                <th>Site</th>
                 <th>Clôture</th>
                 <th>Inscrits/Places</th>
                 <th>Etat</th>
@@ -70,6 +71,7 @@
                 <tr class="test">
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('Y-m-d H:i') }}</td>
+                    <td>{% if sortie.site  is not empty %}{{ sortie.site.nom }}{% endif %}</td>
                     <td>{{ sortie.dateLimiteInscription | date('Y-m-d') }}</td>
                     <td>*/{{ sortie.nbInscriptionMax }}</td>
 

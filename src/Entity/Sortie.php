@@ -61,6 +61,9 @@ class Sortie
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Motif = null;
 
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    private ?Site $site = null;
+
 
     public function __construct()
     {
@@ -222,5 +225,17 @@ class Sortie
     }
 
 // TEST POUR RECUP LES FICHIERS
+
+public function getSite(): ?Site
+{
+    return $this->site;
+}
+
+public function setSite(?Site $site): static
+{
+    $this->site = $site;
+
+    return $this;
+}
 }
 

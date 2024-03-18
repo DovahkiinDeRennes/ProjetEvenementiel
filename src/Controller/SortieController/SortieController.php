@@ -5,6 +5,7 @@ namespace App\Controller\SortieController;
 
 
 use App\Entity\Etat;
+use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\CancelSortieType;
@@ -42,6 +43,8 @@ class SortieController extends AbstractController
             }
             //Définir l'utilisateur organisateur AVEC LA CLASSE SECURITY UP UP UP UP UP (retrouve le $user pour comprendre, ligne 27)
             $sortie->setOrganisateur($user);
+            $site = $em->getRepository(Site::class)->find($user);
+            $sortie->setSite($site);
 
 
 
@@ -49,6 +52,7 @@ class SortieController extends AbstractController
 
                // Je set l'etat avec la fonction setEtatId
                $sortie->setEtatId($etatId);
+
 
                $em->persist($sortie);
 
