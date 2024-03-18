@@ -48,10 +48,10 @@ class UserModifyController extends AbstractController
     public function updateUser(Request $request,EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger,int $id): Response
     {
         // Je récupère l'utilisateur avec son id
-    $user = $entityManager->getRepository(User::class)->find($id);
-    // Je récupère le formulaire avec le user en paramètre
-    $form = $this->createForm(UserModifyType::class, $user);
-    $form->handleRequest($request);
+        $user = $entityManager->getRepository(User::class)->find($id);
+        // Je récupère le formulaire avec le user en paramètre
+        $form = $this->createForm(UserModifyType::class, $user);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 // Si dans le form l'input picture_file est rempli
@@ -71,9 +71,10 @@ class UserModifyController extends AbstractController
                         unlink($picturePath);
                     }
                 }
-
+                // on rajoute le nouveau nom de l'image dans la bdd
                 $user->setPicture($fileName);
             }
+            // on hash le mot de passe
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -83,8 +84,8 @@ class UserModifyController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
-         // dd($user);
-             return $this->redirectToRoute('home_home');
+            // dd($user);
+            return $this->redirectToRoute('home_home');
 
 
         }

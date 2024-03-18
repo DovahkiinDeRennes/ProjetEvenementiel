@@ -18,7 +18,7 @@ class AdminController extends AbstractController
 {
     #[Route(path: 'place', name: 'place')]
     public function getPlaces(LieuRepository $lieuRepository){
-
+        // fonction créer dans le lieuRepository pour récuprer tous lieux
         $places = $lieuRepository->findAllLieuVille();
         return $this->render('Admin/places.html.twig',compact('places'));
     }
@@ -26,25 +26,30 @@ class AdminController extends AbstractController
     #[Route(path: 'createPlace', name: 'createPlace')]
     public function createPlaces(EntityManagerInterface $entityManager, Request $request){
 
-    $places = new Lieu();
+        // on crée un nouveau lieu
+        $places = new Lieu();
 
-    $form = $this->createForm(CreatePlaceType::class, $places);
-    $form->handleRequest($request);
-    if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager->persist($places);
-        $entityManager->flush();
-        return $this->redirectToRoute('admin_place');
-    }
+        // on crée le formulaire pour ce lieu
+        $form = $this->createForm(CreatePlaceType::class, $places);
+        $form->handleRequest($request);
+        // ta capté je pense ?? si tu submits et que le formulaire est valide alors t'envoie dans la base de données
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($places);
+            $entityManager->flush();
+            return $this->redirectToRoute('admin_place');
+        }
         return $this->render('Admin/createPlace.html.twig',['form' => $form->createView()]);
     }
 
     #[Route(path: 'updatePlace/{id}', name: 'updatePlace')]
     public function updatePlace(EntityManagerInterface $entityManager, Request $request, int $id){
 
-      $place = $entityManager->getRepository(Lieu::class)->find($id);
-
+        // on récupere le lieu avec l'id
+        $place = $entityManager->getRepository(Lieu::class)->find($id);
+        // on crée le formulaire pour ce lieu
         $form = $this->createForm(CreatePlaceType::class, $place);
         $form->handleRequest($request);
+        // si tu submits et que le formulaire est valide alors t'envoie dans la base de données
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($place);
             $entityManager->flush();
@@ -55,29 +60,32 @@ class AdminController extends AbstractController
     #[Route(path: 'deletePlace/{id}', name: 'deletePlace')]
     public function deletePlace(EntityManagerInterface $entityManager,  int $id)
     {
+        // on récupere le lieu avec l'id
         $place = $entityManager->getRepository(Lieu::class)->find($id);
+        // et on le delete avec remove()
         $entityManager->remove($place);
         $entityManager->flush();
         return $this->redirectToRoute('admin_place');
 
     }
 
-#[Route(path : 'site', name:'site')]
-public function getSites(EntityManagerInterface $entityManager,SiteRepository $siteRepository){
-
-    $sites = $siteRepository->findAllSiteUser();
+    #[Route(path : 'site', name:'site')]
+    public function getSites(EntityManagerInterface $entityManager,SiteRepository $siteRepository){
+// fonction créer dans le SiteRepository pour récuprer tous les sites
+        $sites = $siteRepository->findAllSiteUser();
 
         return $this->render('Admin/sites.html.twig',compact('sites'));
 
-}
+    }
 
     #[Route(path: 'createSite', name: 'createSite')]
     public function createSites(EntityManagerInterface $entityManager, Request $request){
-
+        // on crée un nouveau site
         $sites = new Site();
-
+        // on crée le formulaire pour ce site
         $form = $this->createForm(CreateSiteType::class, $sites);
         $form->handleRequest($request);
+        // si tu submits et que le formulaire est valide alors t'envoie dans la base de données
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($sites);
             $entityManager->flush();
@@ -88,9 +96,9 @@ public function getSites(EntityManagerInterface $entityManager,SiteRepository $s
 
     #[Route(path: 'updateSite/{id}', name: 'updateSite')]
     public function updateSite(EntityManagerInterface $entityManager, Request $request, int $id){
-
+        //on recupere le site avec l'id
         $site = $entityManager->getRepository(Site::class)->find($id);
-
+// on crée le formulaire pour ce site et on l'hydrate avec $site
         $form = $this->createForm(CreateSiteType::class, $site);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -104,10 +112,12 @@ public function getSites(EntityManagerInterface $entityManager,SiteRepository $s
     #[Route(path: 'deleteSite/{id}', name: 'deleteSite')]
     public function deleteSite(EntityManagerInterface $entityManager,  int $id)
     {
-    $site = $entityManager->getRepository(Site::class)->find($id);
-    $entityManager->remove($site);
-    $entityManager->flush();
-    return $this->redirectToRoute('admin_site');
+        //on recupere le site avec l'id
+        $site = $entityManager->getRepository(Site::class)->find($id);
+        //et on le delete avec remove()
+        $entityManager->remove($site);
+        $entityManager->flush();
+        return $this->redirectToRoute('admin_site');
 
     }
 

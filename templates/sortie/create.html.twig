@@ -3,9 +3,16 @@
     Créer une sortie | {{ parent() }}
 {% endblock %}
 {% block body %}
-    <h1>Créer une sortie</h1>
-    <div>
-        {{ form(sortieForm)}}
+    <div class="back">
+        <form method="post">
+            {{ form_widget(sortieForm) }}
+            <input type="hidden" name="etat_draft" value="1">
+            <input type="hidden" name="etat_published" value="2">
+            <button type="submit" name="draft">Enregistrer comme brouillon</button>
+            <button type="submit" name="publish">Publier</button>
+        </form>
+
         <a href="{{ url('home_home') }}">Annuler</a>
+
     </div>
 {% endblock %}
