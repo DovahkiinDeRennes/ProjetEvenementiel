@@ -87,19 +87,18 @@ class SortieRepository extends ServiceEntityRepository
                    ->setParameter('userId', $userId);
            }
 
-           //filtre si on ne trouve PAS dans les id des participants l'id de la personne connectée
+           //filtre si on ne trouve PAS dans les id des participants l'id de la personne connectée OU s'il n'y a aucun participant
            if(!empty($formData['sorties_nonInscrit'])&& empty($formData['sorties_inscrit'])){
-               $queryBuilder->andWhere('users.id NOT IN(:userId)')
+               $queryBuilder->andWhere('users.id NOT IN (:userId) OR users.id IS NULL')
                    ->setParameter('userId', $userId);
            }
 
            //filtre si etat de la sortie = passee
            if(!empty($formData['sorties_passees'])){
-               $queryBuilder->andWhere("event.etatId = 5 ");
+               $queryBuilder->andWhere('etat = 5 ');
            }
 
-
-
+           $queryBuilder->addOrderBy('event.dateHeureDebut', 'ASC');
 
            $query = $queryBuilder->getQuery();
 
