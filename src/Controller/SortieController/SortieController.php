@@ -116,31 +116,29 @@ class SortieController extends AbstractController
         // Ajouter la sortie a l'utilisateur (c'est une méthode de quoicoubeh? nan je rigole de l' Entity User)
         // On verifie l'etat + la date de cloture
 
-     //  $prout = new \DateTimeImmutable('now' , new \DateTimeZone('Europe/Paris')) = null, calendar = "gregorian", locale = null);
+        //  $prout = new \DateTimeImmutable('now' , new \DateTimeZone('Europe/Paris')) = null, calendar = "gregorian", locale = null);
 
 
         if ($user->getId() == $sortie->getOrganisateur()->getId()) {
             $this->addFlash('error', 'Vous ne pouvez pas vous inscrire à votre propre sortie.');
-
-        }else  {
+        } else {
             $dateActuelle = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
             $dateDebut = $sortie->getDateHeureDebut();
+            $nombreInscriptionsUtilisateur = count($user->getSorties());
 
-
-            if ($dateActuelle < $dateDebut && $sortie->getEtatId()->getId() == 4) {
-                if (!$user->getSorties()) { // Vérifie si l'utilisateur n'a pas déjà des sorties
+            if ($nombreInscriptionsUtilisateur >= $sortie->getNbInscriptionMax()) {
+                $this->addFlash('error', 'Les inscriptions sont aux maximum de leurs capacités.');
+            } elseif ($dateActuelle >= $dateDebut || $sortie->getEtatId()->getId() != 4) {
+                $this->addFlash('error', 'Les inscriptions sont terminées pour cette sortie.');
+            } else {
+                if  ($user->getSorties()->contains($sortie)) {
                     $this->addFlash('error', 'Vous êtes déjà inscrit à une sortie.');
                 } else {
                     $user->addSorty($sortie);
                     $em->flush();
                     $this->addFlash('success', 'Vous êtes inscrit à cette sortie.');
-
                 }
-            } else {
-                $this->addFlash('error', 'Les inscriptions sont terminées pour cette sortie.');
             }
-
-
         }
 
         return $this->redirectToRoute('home_home');
@@ -170,23 +168,32 @@ class SortieController extends AbstractController
     #[Route('update/{id}', name: 'update', methods: ['GET', 'POST'])]
     public function update(Request $request, EntityManagerInterface $em,int $id): Response
     {
+
+        $userId = $this->getUser()->getId();
         // Récupérer la sortie avec son id
         $sortie = $em->getRepository(Sortie::class)->find($id);
         // Création du formulaire avec la sortie recupérée
         $form = $this->createForm(SortieType::class, $sortie);
-
+        $user = $em->getRepository(User::class)->find($userId);
         // hydrater le formulaire
         $form->handleRequest($request);
         // si le formulaire est envoyé et valide
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($user->getId() == $sortie->getOrganisateur()->getId()) {
+            if ($form->isSubmitted() && $form->isValid()) {
 
 
-            $em->persist($sortie);
+                $em->persist($sortie);
 
-            $em->flush();
+                $em->flush();
+                return $this->redirectToRoute('home_home');
+            }
+
+        }else{
+            $this->addFlash('error', 'Vous ne pouvez pas modifier une sortie dont vous n\'estiez pas l\'organisateur.');
             return $this->redirectToRoute('home_home');
         }
         return $this->render('sortie/update.html.twig', ['form' => $form->createView(), 'id' => $id ]);
+
     }
 
     #[Route('detail/{id}', name: 'detail', methods: ['GET', 'POST'])]
@@ -203,22 +210,38 @@ class SortieController extends AbstractController
     #[Route('cancel/{id}', name: 'cancel', methods: ['GET', 'POST'])]
     public function cancel(Request $request, EntityManagerInterface $em, int $id): Response
     {
+
+
         // Récupérer la sortie avec son id
         $sorties = $em->getRepository(Sortie::class)->find($id);
         // Création du formulaire avec la sortie recupérée
         $form = $this->createForm(CancelSortieType::class, $sorties);
 
+
         $form->handleRequest($request);
 
-        if($form->isSubmitted()){
-            // si submit alors on set un état qu'on récupère avec l'id
-            $etatId = $em->getRepository(Etat::class)->find(2);
-            $sorties->setEtatId($etatId);
-            $em->persist($sorties);
-            $em->flush();
 
-            return $this->redirectToRoute('home_home');
+        $dateActuelle = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+        $dateDebut = $sorties->getDateHeureDebut();
+
+
+
+        if ($dateActuelle >= $dateDebut) {
+            $this->addFlash('error', 'Vous ne pouvez pas annuler une sortie déjà "En cours".');
+            return  $this->redirectToRoute('home_home');
+        } else {
+            if ($form->isSubmitted()) {
+                // si submit alors on set un état qu'on récupère avec l'id
+                $etatId = $em->getRepository(Etat::class)->find(2);
+                $sorties->setEtatId($etatId);
+                $em->persist($sorties);
+                $em->flush();
+
+                return $this->redirectToRoute('home_home');
+            }
+
         }
+
         return $this->render('sortie/cancel.html.twig', [
             'form' => $form ->createView(),
             'sorties' => $sorties

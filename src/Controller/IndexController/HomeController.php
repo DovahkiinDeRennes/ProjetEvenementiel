@@ -6,6 +6,7 @@ use App\Entity\Sortie;
 use App\Form\SearchSortieType;
 use App\Entity\User;
 use App\Repository\SortieRepository;
+use App\Service\MiseAjourSortie;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,9 +20,17 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route(name: 'home_')]
 class HomeController extends  AbstractController
 {
-    #[Route(path: '', name: 'home', methods: ['GET', 'POST'])]
-    public function home(Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, Security $security): Response
+
+
+    public function __construct(MiseAjourSortie $MiseAjourSortie)
     {
+        $this->MiseAjourSortie = $MiseAjourSortie;
+    }
+    #[Route(path: '', name: 'home', methods: ['GET', 'POST'])]
+    public function home(Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, Security $security, MiseAjourSortie $MiseAjourSortie): Response
+    {
+        $this->MiseAjourSortie->updateSortieState();
+
         if ($security->isGranted('IS_AUTHENTICATED')) {
             $userId = $this->getUser()->getId();
             $user = $entityManager->getRepository(User::class)->find($userId);
@@ -30,7 +39,6 @@ class HomeController extends  AbstractController
             if ($user && !$user->getActif()) {
                 // Récupération de toutes les sorties
                 $sorties = $sortieRepository->findAllEvents();
-
                 // Initialisation de la variable pour stocker les sorties à afficher
                 $sortiesToDisplay = $sorties;
 
@@ -47,12 +55,14 @@ class HomeController extends  AbstractController
                 // Compte inscrits/sortie
                 $count = [];
                 foreach ($sortiesToDisplay as $sortie) {
+
                     $count[$sortie->getId()] = $sortie->getUsers()->count();
                 }
 
                 return $this->render('home/home.html.twig', [
                     'sorties' => $sortiesToDisplay,
                     'count' => $count,
+
                     'searchForm' => $searchForm->createView()
                 ]);
             } else {
