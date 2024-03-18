@@ -79,7 +79,7 @@
                     <td> {% if sortie.etatId  is not empty %}{{ sortie.etatId.libelle }}{% endif %}</td>
 
                     <td> {{ count[sortie.id] }}</td>
-                    <td> {% if sortie.organisateur is not empty %}{{ sortie.organisateur.pseudo }} {% endif %}</td>
+                    <td> <a href="{{ url('user_profil',{'id': sortie.organisateur.id}) }}">{% if sortie.organisateur is not empty %}{{ sortie.organisateur.pseudo }} {% endif %}</a></td>
 
                     <td>
                         {%if sortie.etatId != null and sortie.etatId.id == 3 %}

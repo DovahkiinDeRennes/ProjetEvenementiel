@@ -39,7 +39,7 @@
                 <table>
                 {% for participant in sortie.users %}
                     <tr>
-                        <td><a href="{{ url('user_detail', {'id':participant.id}) }}" class="color">{{ participant.pseudo }}</a></td>
+                        <td><a href="{{ url('user_profil', {'id':participant.id}) }}" class="color">{{ participant.pseudo }}</a></td>
                     </tr>
                 {% endfor %}
                 </table>

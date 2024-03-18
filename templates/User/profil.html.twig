@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h2>{{user.pseudo }}</h2>
+
+    <img class="image" src="{% if user.picture is not empty %}
+                                {{ asset('uploads/'~ user.picture) }}
+                            {% else %}
+                                {{ asset('images/chatprofil.png') }}
+                            {% endif %}" alt="Photo de profil">
+    <ul>
+        <li> {{ user.prenom }}</li>
+        <li> {{ user.nom }}</li>
+        <li> {{ user.telephone }}</li>
+        <li> {{ user.email }}</li>
+        <li> {{ user.siteId.nom }}</li>
+    </ul>
+    <button><a href="{{ url('home_home') }}">Retour</a></button>
+
+{% endblock %}

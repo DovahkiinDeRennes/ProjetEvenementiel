@@ -5,6 +5,8 @@ namespace App\Controller\ModifyUserController;
 use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\UserModifyType;
+use App\Repository\ParticipantRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -155,12 +157,13 @@ class UserModifyController extends AbstractController
         return $this->render('User/UserModify.html.twig', ['form' => $form->createView(), 'user' => $user]);
     }
 
-    #[Route(path:'detail', name:'detail')]
-    public function detail()
+    #[Route(path:'profil/{id}', name:'profil')]
+    public function detail(int $id, UserRepository $userRepository): Response
     {
-
-        return $this->redirectToRoute('home_home');
-
+        $user = $userRepository->find($id);
+        return $this->render('/User/profil.html.twig', [
+            'user' => $user
+        ]);
     }
 
 // TEST POUR RECUP LES FICHIERS
