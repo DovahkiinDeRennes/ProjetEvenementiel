@@ -63,7 +63,8 @@ class HomeController extends  AbstractController
                     'sorties' => $sortiesToDisplay,
                     'count' => $count,
 
-                    'searchForm' => $searchForm->createView()
+                    'searchForm' => $searchForm->createView(),
+                    'user' => $user
                 ]);
             } else {
                 return $this->render('user/actif.html.twig');

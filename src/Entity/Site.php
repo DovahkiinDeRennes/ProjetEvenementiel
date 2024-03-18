@@ -82,7 +82,7 @@ class Site
 
         return $this;
     }
-    // TEST POUR RECUP LES FICHIERS
+
 
     /**
      * @return Collection<int, Sortie>

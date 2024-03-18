@@ -241,7 +241,6 @@ class SortieController extends AbstractController
             }
 
         }
-
         return $this->render('sortie/cancel.html.twig', [
             'form' => $form ->createView(),
             'sorties' => $sorties

@@ -280,5 +280,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
-// TEST POUR RECUP LES FICHIERS
+
 }

@@ -8,11 +8,9 @@
        {{ form_start(searchForm) }}
 
         <div>
-
             {{ form_label(searchForm.site) }}
             {{ form_widget(searchForm.site) }}
             {{ form_errors(searchForm.site) }}
-
         </div>
         <div>
             {{ form_label(searchForm.nom) }}
@@ -84,29 +82,35 @@
                     <td> {% if sortie.organisateur is not empty %}{{ sortie.organisateur.pseudo }} {% endif %}</td>
 
                     <td>
-
+                        {%if sortie.etatId != null and sortie.etatId.id == 3 %}
                         {# si etat = création ET id de la personne connectée = id sortie.organisateur #}
                         <button class="update"><a href="{{ url('sortie_update',{'id':sortie.id}) }}">Modifier</a></button>
                         <button class="publish"><a href="{{ url('sortie_newEtat', {'id':sortie.id}) }}">Publier</a></button>
-                        {# Sinon #}
+                        {% else %}
                         <button class="detail"><a href="{{ url('sortie_detail', {'id':sortie.id}) }}">Afficher</a></button>
-                        {# endif #}
+                        {% endif %}
 
-                        {# Si etat = ouvert ET id de la personne connectée = id sortie.organisateur  #}
+                        {% if sortie.etatId != null and sortie.etatId.id == 4 and sortie not in user.getSorties() %}
+                            <button class="subscribe"><a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}">S'inscrire</a></button>
 
-                        {# endif #}
+                        {% elseif sortie.etatId != null and sortie.etatId.id == 4 and sortie in user.getSorties() %}
+                            <button class="unsubscribe"><a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}">Se désister</a></button>
+                        {% endif %}
 
+                        {% if sortie.organisateur is not null and app.user.id == sortie.organisateur.id %}
+                            <button class="delete"><a href="{{ url('sortie_cancel', {'id': sortie.id }) }}">Annuler</a></button>
+                        {% endif %}
                         {#  Si d de la personne connectée != id sortie.organisateur #}
                         {# Si inscrit #}
 
-                        <button class="unsubscribe"><a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}">Se désister</a></button>
+
                         {# sinon #}
-                        <button class="subscribe"><a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}">S'inscrire</a></button>
+
                         {# endif #}
                         {# endif #}
 
                     </td>
-                    <td> <button class="delete"><a href="{{ url('sortie_cancel', {'id': sortie.id }) }}">Annuler</a></button></td>
+                    <td> </td>
                 </tr>
             {% endfor %}
             </tbody>
