@@ -52,10 +52,10 @@ class SortieRepository extends ServiceEntityRepository
            ->addSelect('event');
 
 
+
            if(!empty($formData['nom'])){
                $queryBuilder->where('event.nom LIKE :nom')
                    ->setParameter('nom', '%'.$formData['nom'].'%');
-               //dd($queryBuilder->getQuery()->getResult());
            }
 
            if(!empty($formData['site'])){
