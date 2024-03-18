@@ -59,7 +59,7 @@ class SortieRepository extends ServiceEntityRepository
            }
 
            if(!empty($formData['site'])){
-               $queryBuilder->andWhere('event.lieuId LIKE :site')
+               $queryBuilder->andWhere('event.lieuId IN (:site)')
                    ->setParameter('site', $formData['site']);
            }
 
@@ -96,7 +96,7 @@ class SortieRepository extends ServiceEntityRepository
 
            //filtre si etat de la sortie = passee
            if(!empty($formData['sorties_passees'])){
-               $queryBuilder->andWhere("event.etat = 'Passée' ");
+               $queryBuilder->andWhere("event.etatId = 5 ");
            }
 
 

@@ -21,65 +21,84 @@ class UserModifyController extends AbstractController
     #[Route(path: 'list', name: 'list', methods: ['GET', 'POST'])]
     public function list(EntityManagerInterface $entityManager): Response
     {
-        // Je récupère la liste des utilisateurs dans la base de données
 
-        $users = $entityManager->getRepository(User::class)->findAll();
+// Vérifie si l'utilisateur a le rôle 'ROLE_ADMIN'
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $userId = $this->getUser()->getId();
+            $users = $entityManager->getRepository(User::class)->findAll();
 
-        // Je crée un tableau pour stocker les utilisateurs à afficher
-        $filteredUsers = [];
+            // Je crée un tableau pour stocker les utilisateurs à afficher
+            $filteredUsers = [];
 
-        // Je parcours chaque utilisateur pour filtrer ceux ayant un nom égal à "Delete"
-        foreach ($users as $user) {
-            if ($user->getNom() !== 'Deleted') {
-                // J'ajoute l'utilisateur au tableau des utilisateurs à afficher
-                $filteredUsers[] = $user;
+            // Je parcours chaque utilisateur pour filtrer ceux ayant un nom égal à "Delete"
+            foreach ($users as $user) {
+                if ($user->getNom() !== 'Deleted' && $user->getId() !== $userId) {
+                    // J'ajoute l'utilisateur au tableau des utilisateurs à afficher
+                    $filteredUsers[] = $user;
+                }
             }
+
+            return $this->render('User/userList.html.twig', ['users' => $filteredUsers]);
         }
 
-
-
-        return $this->render('User/userList.html.twig', ['users' => $filteredUsers]);
+// Si l'utilisateur n'a pas le rôle 'ROLE_ADMIN', affiche une autre vue
+        return $this->render('User/non.html.twig');
     }
+
+
+
+
+
+
 
 
     #[Route(path: 'list/desac/{id}', name: 'desac', methods: ['GET', 'POST'])]
     public function desac(EntityManagerInterface $entityManager,int $id): Response
     {
-        // Je récupère l'utilisateur avec son id
-        $users = $entityManager->getRepository(User::class)->find($id);
-        //Quand je clique sur le bouton de la page /user/list, je desactive l'utilisateur avec son id  (regarde la page userList.html.twig)
-        $users->setActif(true);
-        $entityManager->persist($users);
-        $entityManager->flush();
-        return $this->redirectToRoute('user_list', ['users' => $users]);
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+
+            // Je récupère l'utilisateur avec son id
+            $users = $entityManager->getRepository(User::class)->find($id);
+            //Quand je clique sur le bouton de la page /user/list, je desactive l'utilisateur avec son id  (regarde la page userList.html.twig)
+            $users->setActif(true);
+            $entityManager->persist($users);
+            $entityManager->flush();
+            return $this->redirectToRoute('user_list', ['users' => $users]);
+        }
+        return $this->render('User/non.html.twig');
     }
 
     #[Route(path: 'list/supprime/{id}', name: 'supprime', methods: ['GET', 'POST'])]
     public function supprime(EntityManagerInterface $entityManager,int $id): Response
     {
-        // Je récupère l'utilisateur avec son id
-        $users = $entityManager->getRepository(User::class)->find($id);
-$anom = 'Delete';
-        $users->setActif(true);
-        $users->setNom($anom);
-        $users->setPrenom($anom);
-        $users->setPseudo($anom);
-        $users->setPassword($anom);
-        $users->setEmail($anom);
-        $users->setTelephone($anom);
-        $users->setPicture($anom);
 
-        //Quand je clique sur le bouton de la page /user/list, je desactive l'utilisateur avec son id  (regarde la page userList.html.twig)
+        if ($this->isGranted('ROLE_ADMIN')) {
+            // Je récupère l'utilisateur avec son id
+            $users = $entityManager->getRepository(User::class)->find($id);
+            $anom = 'Deleted';
+            $users->setActif(true);
+            $users->setNom($anom);
+            $users->setPrenom($anom);
+            $users->setPseudo($anom);
+            $users->setPassword($anom);
+            $users->setTelephone($anom);
+            $users->setPicture($anom);
+
+            //Quand je clique sur le bouton de la page /user/list, je desactive l'utilisateur avec son id  (regarde la page userList.html.twig)
 
 
-        // $findSortieByUser = $entityManager->getRepository(Sortie::class)->findBy(['organisateur' => $users]);
-        //  foreach ($findSortieByUser as $sortie) {
-        //  $entityManager->remove($sortie);
-        //}
-        $entityManager->persist($users);
-        $entityManager->flush();
-        return $this->redirectToRoute('user_list', ['users' => $users]);
+            // $findSortieByUser = $entityManager->getRepository(Sortie::class)->findBy(['organisateur' => $users]);
+            //  foreach ($findSortieByUser as $sortie) {
+            //  $entityManager->remove($sortie);
+            //}
+            $entityManager->persist($users);
+            $entityManager->flush();
+            return $this->redirectToRoute('user_list', ['users' => $users]);
+        }
+        return $this->render('User/non.html.twig');
     }
+
 
 
 
@@ -88,6 +107,7 @@ $anom = 'Delete';
     #[Route(path: 'update/{id}', name: 'updateUser', methods: ['GET', 'POST'])]
     public function updateUser(Request $request,EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger,int $id): Response
     {
+
         // Je récupère l'utilisateur avec son id
         $user = $entityManager->getRepository(User::class)->find($id);
         // Je récupère le formulaire avec le user en paramètre
