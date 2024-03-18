@@ -102,7 +102,7 @@ class SortieController extends AbstractController
 
 
     #[Route('suscribe/{id}', name: 'suscribe', methods: ['GET', 'POST'])]
-    public function suscribe(Request $request, EntityManagerInterface $em,int $id): Response
+    public function suscribe( EntityManagerInterface $em,int $id): Response
     {
         // Récupérer l'utilisateur connecte (oui, c'est une nouvelle façon de faire  tu va faire quoi?)
         $userId = $this->getUser()->getId();
@@ -117,27 +117,31 @@ class SortieController extends AbstractController
         // On verifie l'etat + la date de cloture
 
      //  $prout = new \DateTimeImmutable('now' , new \DateTimeZone('Europe/Paris')) = null, calendar = "gregorian", locale = null);
-        $dateActuelle = new \DateTime('now' , new \DateTimeZone('Europe/Paris'));
-        $dateDebut = $sortie->getDateHeureDebut();
 
-        if ($dateActuelle < $dateDebut && $sortie->getEtatId()->getId() == 4) {
-            if (!$user->getSorties()) { // Vérifie si l'utilisateur n'a pas déjà des sorties
-                $this->addFlash('error', 'Vous êtes déjà inscrit à une sortie.');
+
+        if ($user->getId() == $sortie->getOrganisateur()->getId()) {
+            $this->addFlash('error', 'Vous ne pouvez pas vous inscrire à votre propre sortie.');
+
+        }else  {
+            $dateActuelle = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+            $dateDebut = $sortie->getDateHeureDebut();
+
+
+            if ($dateActuelle < $dateDebut && $sortie->getEtatId()->getId() == 4) {
+                if (!$user->getSorties()) { // Vérifie si l'utilisateur n'a pas déjà des sorties
+                    $this->addFlash('error', 'Vous êtes déjà inscrit à une sortie.');
+                } else {
+                    $user->addSorty($sortie);
+                    $em->flush();
+                    $this->addFlash('success', 'Vous êtes inscrit à cette sortie.');
+
+                }
             } else {
-                $user->addSorty($sortie);
-                $em->flush();
-                $this->addFlash('success', 'Vous êtes inscrit à cette sortie.');
-
+                $this->addFlash('error', 'Les inscriptions sont terminées pour cette sortie.');
             }
-        } else {
-            $this->addFlash('error', 'Les inscriptions sont terminées pour cette sortie.');
+
+
         }
-
-
-
-
-
-
 
         return $this->redirectToRoute('home_home');
     }
