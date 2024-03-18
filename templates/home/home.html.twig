@@ -5,12 +5,14 @@
 
 {% block body %}
     <div>
-        {{ form_start(searchForm) }}
+       {{ form_start(searchForm) }}
 
         <div>
+
             {{ form_label(searchForm.site) }}
             {{ form_widget(searchForm.site) }}
             {{ form_errors(searchForm.site) }}
+
         </div>
         <div>
             {{ form_label(searchForm.nom) }}
@@ -49,7 +51,7 @@
             {{ form_errors(searchForm.sorties_passees) }}
         </div>
         {{ form_end(searchForm) }}
-    </div> #}
+    </div>
     <div class=" pad ">
         <table class="">
             <thead>

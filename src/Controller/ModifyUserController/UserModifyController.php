@@ -2,6 +2,7 @@
 
 namespace App\Controller\ModifyUserController;
 
+use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\UserModifyType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,9 +22,23 @@ class UserModifyController extends AbstractController
     public function list(EntityManagerInterface $entityManager): Response
     {
         // Je récupère la liste des utilisateurs dans la base de données
+
         $users = $entityManager->getRepository(User::class)->findAll();
 
-        return $this->render('User/userList.html.twig', ['users' => $users]);
+        // Je crée un tableau pour stocker les utilisateurs à afficher
+        $filteredUsers = [];
+
+        // Je parcours chaque utilisateur pour filtrer ceux ayant un nom égal à "Delete"
+        foreach ($users as $user) {
+            if ($user->getNom() !== 'Deleted') {
+                // J'ajoute l'utilisateur au tableau des utilisateurs à afficher
+                $filteredUsers[] = $user;
+            }
+        }
+
+
+
+        return $this->render('User/userList.html.twig', ['users' => $filteredUsers]);
     }
 
 
@@ -39,6 +54,32 @@ class UserModifyController extends AbstractController
         return $this->redirectToRoute('user_list', ['users' => $users]);
     }
 
+    #[Route(path: 'list/supprime/{id}', name: 'supprime', methods: ['GET', 'POST'])]
+    public function supprime(EntityManagerInterface $entityManager,int $id): Response
+    {
+        // Je récupère l'utilisateur avec son id
+        $users = $entityManager->getRepository(User::class)->find($id);
+$anom = 'Delete';
+        $users->setActif(true);
+        $users->setNom($anom);
+        $users->setPrenom($anom);
+        $users->setPseudo($anom);
+        $users->setPassword($anom);
+        $users->setEmail($anom);
+        $users->setTelephone($anom);
+        $users->setPicture($anom);
+
+        //Quand je clique sur le bouton de la page /user/list, je desactive l'utilisateur avec son id  (regarde la page userList.html.twig)
+
+
+        // $findSortieByUser = $entityManager->getRepository(Sortie::class)->findBy(['organisateur' => $users]);
+        //  foreach ($findSortieByUser as $sortie) {
+        //  $entityManager->remove($sortie);
+        //}
+        $entityManager->persist($users);
+        $entityManager->flush();
+        return $this->redirectToRoute('user_list', ['users' => $users]);
+    }
 
 
 

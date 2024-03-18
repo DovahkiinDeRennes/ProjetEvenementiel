@@ -17,10 +17,12 @@ class SearchSortieType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->setMethod('GET')
-            ->add('site', EntityType::class,[
-                'class'=>Site::class,
-                'choice_label' => 'Site'
-            ] )
+
+            ->add('site', EntityType::class, [
+                'class' => Site::class,
+                'choice_label' => 'nom',
+                'required' => false
+            ])
             ->add('nom', TextType::class, [
                 'required'=> false
             ])
@@ -60,7 +62,7 @@ class SearchSortieType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            // Configure your form options here
+
         ]);
     }
 }

@@ -46,9 +46,9 @@ class SortieRepository extends ServiceEntityRepository
        public function filterEvent(array $formData, $userId): array
        {
            $queryBuilder = $this->createQueryBuilder('event')
-                ->join('event.users', 'users')
-                ->join('event.etatId', 'etat')
-                ->join('event.lieuId', 'site')
+                ->leftjoin('event.users', 'users')
+                ->leftjoin('event.etatId', 'etat')
+                ->leftjoin('event.lieuId', 'site')
            ->addSelect('event');
 
 
