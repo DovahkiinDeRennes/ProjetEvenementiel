@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Créer des membres
+{% endblock %}
+
+{% block body %}
+    <h2>Créer des membres</h2>
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+    <div>
+        {{ form_label(form.list_of_users) }}
+        {{ form_widget(form.list_of_users) }}
+        {{ form_errors(form.list_of_users) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

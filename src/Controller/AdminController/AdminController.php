@@ -7,6 +7,7 @@ use App\Entity\Site;
 use App\Entity\User;
 use App\Form\CreatePlaceType;
 use App\Form\CreateSiteType;
+use App\Form\ListOfUsersType;
 use App\Form\RegistrationFormType;
 use App\Form\RegistrationUserFormType;
 use App\Form\UserModifyType;
@@ -21,7 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route(path: 'admin/', name: 'admin_')]
 class AdminController extends AbstractController
@@ -186,5 +189,79 @@ class AdminController extends AbstractController
         else{
             return $this->render('User/non.html.twig');
         }
+    }
+
+
+    #[Route(path:'registerUsers', name:'registerUsers', methods:['GET', 'POST'])]
+    public function registerUsers (EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, Request $request, SerializerInterface $serializer, ValidatorInterface $validator){
+
+        $form = $this->createForm(ListOfUsersType::class);
+        $form->handleRequest($request);
+
+        //récupération du champs File sous form de tableau (contenant un UploadedFile)
+        $csvFile = $request->files->get('list_of_users');
+
+            if($form->isSubmitted()){
+
+                if($csvFile['list_of_users'] instanceof UploadedFile)
+                {
+                    //Decoder le CSV : transformer le csv en Array
+                 $users = $serializer->decode(file_get_contents($csvFile['list_of_users']->getPathname()), 'csv');
+
+                 foreach ($users as $newUser){
+
+                     //Denormalize : transformer le Array en Object
+                     $user = $serializer->denormalize($newUser, User::class);
+
+                     //Valider l'Objet utilisateur
+                     $constraintErrors = $validator->validate($user);
+
+                     if(count($constraintErrors)>0){
+
+                         $errorMessages=[];
+
+                         foreach ($constraintErrors as $error){
+                             $errorMessage = $error->getMessage();
+                             $errorMessages[] = $errorMessage;
+                         }
+                     }
+
+                     $user->setEmail($newUser['email']);
+                     $user->setPseudo($newUser['pseudo']);
+                     $user->setNom($newUser['nom']);
+                     $user->setPrenom($newUser['prenom']);
+                     $user->setTelephone($newUser['telephone']);
+
+                     $site = $entityManager->getRepository(Site::class)->findOneBy(['nom' => $newUser['site']]);
+                     $user->setSiteId($site);
+
+                     $user->setActif(0);
+                     $user->setRoles(['ROLE_USER']);
+                     // encode the plain password
+                     $user->setPassword(
+                         $userPasswordHasher->hashPassword(
+                             $user,
+                             $newUser['password']
+                         )
+                     );
+
+                     $entityManager->persist($user);
+                 }
+
+             $entityManager->flush();
+
+            }
+                $this->addFlash('success', 'Créations de comptes réalisée avec succès !');
+                return $this->redirectToRoute('user_list');
+            }
+            //else{
+            //    $this->addFlash('alert', 'Créations de comptes réalisée avec succès !');
+//                return $this->redirectToRoute('home_home');
+//            }
+
+
+        return $this->render('/admin/registerUsers.html.twig', [
+            'form'=>$form
+        ]);
     }
 }

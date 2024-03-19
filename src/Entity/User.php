@@ -43,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     #[Assert\Regex(
-        pattern: "/^[0-9]*$/",
+        pattern: "/^0[67][0-9]{8}$/",
         message: "Le numéro de téléphone doit être composé uniquement de chiffres."
     )]
     private ?string $telephone = null;
