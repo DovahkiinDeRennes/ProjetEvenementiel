@@ -34,7 +34,7 @@ class AdminController extends AbstractController
     }
 
     #[Route(path: 'createPlace', name: 'createPlace')]
-    public function createPlaces(EntityManagerInterface $entityManager, Request $request){
+    public function createPlaces(EntityManagerInterface $entityManager, Request $request, Security $security){
 
         // on crée un nouveau lieu
         $places = new Lieu();
@@ -46,7 +46,13 @@ class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($places);
             $entityManager->flush();
-            return $this->redirectToRoute('admin_place');
+            if($security->getUser()->getRoles()[0] === 'ROLE_ADMIN')
+            {
+                return $this->redirectToRoute('admin_place');
+            }
+            else {
+                return $this->redirectToRoute('sortie_create');
+            }
         }
         return $this->render('Admin/createPlace.html.twig',['form' => $form->createView()]);
     }

@@ -8,6 +8,7 @@
             {{ form_widget(sortieForm) }}
             <input type="hidden" name="etat_draft" value="1">
             <input type="hidden" name="etat_published" value="2">
+            <a href="{{ url('admin_createPlace') }}">Ajouter un lieu</a>
             <button type="submit" name="draft">Enregistrer comme brouillon</button>
             <button type="submit" name="publish">Publier</button>
         </form>
