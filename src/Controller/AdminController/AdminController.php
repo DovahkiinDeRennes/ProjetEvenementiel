@@ -140,7 +140,6 @@ class AdminController extends AbstractController
 
             $form->handleRequest($request);
 
-
             if ($form->isSubmitted()) {
 
                 $user->setActif(0);
@@ -152,7 +151,6 @@ class AdminController extends AbstractController
                         $form->get('password')->getData()
                     )
                 );
-
 
                 if ($form->get('picture_file')->getData() instanceof UploadedFile) {
                     $pictureFile = $form->get('picture_file')->getData();
@@ -169,14 +167,12 @@ class AdminController extends AbstractController
                     $user->setPicture($fileName);
                 }
 
-
                 $entityManager->persist($user);
                 $entityManager->flush();
 
                 // do anything else you need here, like send an email
 
                 return $this->redirectToRoute('user_list', ['users' => $user]);
-
             }
 
             return $this->render('/admin/registerUser.html.twig', [
