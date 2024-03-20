@@ -15,26 +15,35 @@
             {{ form_row(sortieForm.lieuId) }}
             <div id="info-lieu"></div>
 
-            {{ form_end(sortieForm) }}
-
             <input type="hidden" name="etat_draft" value="1">
             <input type="hidden" name="etat_published" value="2">
-            <a href="{{ url('admin_createPlace') }}">Ajouter un lieu</a>
+
             <button type="submit" name="draft">Enregistrer comme brouillon</button>
             <button type="submit" name="publish">Publier</button>
+            <a href="{{ url('admin_createPlace') }}">Ajouter un lieu</a>
+            <a href="{{ url('home_home') }}">Annuler</a>
+            {{ form_end(sortieForm) }}
 
-            <script>
-                document.getElementById('sortie_lieuId').addEventListener('change', function() {
-                    var lieuId = this.value;
-                    getInfoLieu(lieuId);
-                });
 
-                function getInfoLieu(lieuId){
-                    fetch("{{ path('lieu_info',{'id': 'PLACEHOLDER'}) }}".replace('PLACEHOLDER',lieuId))
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log(data);
-                            document.getElementById('info-lieu').innerHTML = `
+
+
+        </form>
+
+
+
+    </div>
+    <script>
+        document.getElementById('sortie_lieuId').addEventListener('change', function() {
+            var lieuId = this.value;
+            getInfoLieu(lieuId);
+        });
+
+        function getInfoLieu(lieuId){
+            fetch("{{ path('lieu_info',{'id': 'PLACEHOLDER'}) }}".replace('PLACEHOLDER',lieuId))
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('info-lieu').innerHTML = `
 <nav>
 <ul>
 
@@ -46,16 +55,10 @@
 </ul>
 </nav>
         `;
-                        })
-                        .catch(error => console.error('Error:', error));
-                }
+                })
+                .catch(error => console.error('Error:', error));
+        }
 
 
-            </script>
-        </form>
-
-        <a href="{{ url('home_home') }}">Annuler</a>
-
-    </div>
-
+    </script>
 {% endblock %}

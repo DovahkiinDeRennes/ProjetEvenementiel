@@ -231,7 +231,7 @@ class SortieController extends AbstractController
 
 
         if ($dateActuelle >= $dateDebut) {
-            $this->addFlash('error', 'Vous ne pouvez pas annuler une sortie déjà "En cours".');
+            $this->addFlash('danger', 'Vous ne pouvez pas annuler une sortie déjà "En cours".');
             return  $this->redirectToRoute('home_home');
         } else {
             if ($form->isSubmitted()) {
