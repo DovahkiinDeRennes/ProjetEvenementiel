@@ -31,6 +31,9 @@
                     <div class="flex">
                         <nav>
                             <ul>
+                                    <li>
+                                        <a href="{{ url('home_home') }}">Accueil</a>
+                                    </li>
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <li>
                                         <a href="{{ url('admin_place') }}">Gérer les lieux</a>
@@ -44,10 +47,10 @@
                                     <li>
                                         <a href="{{ url('admin_registerUsers') }}">Créer des membres</a>
                                     </li>
+                                    <li>
+                                        <a href="{{ url('user_list') }}">Listes des membres</a>
+                                    </li>
                                 {% endif %}
-                                <li>
-                                    <a href="{{ url('home_home') }}">Accueil</a>
-                                </li>
                             </ul>
                         </nav>
                     </div>
