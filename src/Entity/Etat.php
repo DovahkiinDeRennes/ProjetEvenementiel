@@ -14,9 +14,9 @@ class Etat
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-// TestFinaleeAttenteqsddqds Alexandre Margaux BARBIERsdsdq
+
     #[ORM\Column(length: 30)]
-    private ?string $libelle = null;
+    private ?string $libelle;
 
     #[ORM\OneToMany(targetEntity: Sortie::class, mappedBy: 'etatId')]
     private Collection $sorties;

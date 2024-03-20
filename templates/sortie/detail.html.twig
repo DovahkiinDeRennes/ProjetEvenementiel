@@ -5,9 +5,8 @@
 {% endblock %}
 
 {% block body %}
-    <h2>Détails de la sortie</h2>
-    <form>
-        <div id="sortie">
+    <form class="back">
+        <div id="sortie ">
             <div>
                 <label for="sortie_nom">Nom</label>
                 <input id="sortie_nom" type="text" value="{{ sortie.nom }}" disabled>
@@ -30,7 +29,7 @@
             </div>
             <div>
                 <label for="sortie_nb_inscrits">Description</label>
-                <input id="sortie_nb_inscrits" type="number" value="{{ sortie.description }}" disabled>
+                <input id="sortie_nb_inscrits" type="text" value="{{ sortie.description }}" disabled>
             </div>
 {#            <div>#}
 {#                <label for="sortie_nb_inscrits">Nombre de places</label>#}
@@ -40,13 +39,14 @@
                 <table>
                 {% for participant in sortie.users %}
                     <tr>
-                        <td><a href="{{ url('user_detail', {'id':participant.id}) }}">{{ participant.pseudo }}</a></td>
+                        <td><a href="{{ url('user_profil', {'id':participant.id}) }}" class="color">{{ participant.pseudo }}</a></td>
                     </tr>
                 {% endfor %}
                 </table>
             </div>
-
-
         </div>
+
     </form>
+
+
 {% endblock %}

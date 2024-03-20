@@ -2,20 +2,20 @@
 
 /*-----------------------------Header------------------------------*/
 header {
-    background-color: #2c80c4;
+    background-color: #eee9e5;
     width: auto;
     height: 150px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: #ffffff;
+    color: black;
    /* background-image: url("../images/6.gif");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;*/
     box-shadow : 0 0 20px rgba(0, 0, 0, 0.79);
     padding: 20px;
-    margin-bottom: 50px;
+
 }
 .header-content {
     display: flex;
@@ -37,11 +37,13 @@ header nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
+
 }
 
 header nav li {
     display: inline;
     margin-right: 10px;
+
 
 }
 header nav li a{
@@ -68,14 +70,48 @@ header nav li a{
     border-radius: 50%;
     box-shadow : 0 0 20px rgba(0, 0, 0, 0.79);
 }
+
+.image2{
+    width: 45px;
+    height: 45px;
+
+}
+
+
+td.image2 {
+    margin: 0;
+}
+
 .size{
     font-size: 50px;
 }
 .left-content {
     display: flex;
     align-items: center;
-    margin-right: 175px;
+    margin-right: 160px;
 }
+/*-----------------------------Footer------------------------------*/
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+    background-color: #000000;
+    color: #ffffff;
+    box-shadow : 0 0 20px rgba(0, 0, 0, 0.79);
+
+}
+
+.footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+
 /*-----------------------------Body------------------------------*/
 .toto{
     min-height: 76vh;
@@ -94,10 +130,23 @@ header nav li a{
 
 }
 
-body {
+main{
+    margin: auto 0;
     height: auto;
-    background-color: #9db2b2;
+}
+body {
+    margin: auto 0;
+    height: auto;
+    background-color: #ffffff;
     justify-content: space-between;
+    padding-bottom: 75px;
+    margin-bottom: 45px;
+   /* background-image: url("../images/2.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+*/
 
 }
 
@@ -109,36 +158,46 @@ p{
 
 table {
     margin-top: 15px;
-    padding: 20px;
     width: 100%;
     border-collapse: collapse;
-    background-color: #ffffff;
     border-radius: 5px;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.79);
     color: black;
     margin-bottom: 15px;
 }
-.style {
-    background-color: #5B21B6;
-    border: 3px solid #ffffff;
-    border-radius: 5px;
-    padding: 20px;
-    width: 100%;
-}
+
 th, td {
 
-    padding: 5px;
+    padding: 10px;
     text-align: left;
 }
 
 
 tr.test:hover {
-    background-color: #000000;
-    color: #f3f3f3;
+    background-color: #efd697;
+    color: #000000;
 }
 
+ td a {
+    color: black;
+     text-decoration: none;
+}
+
+
+
 /*-----------------------------Form------------------------------*/
+
+.back{
+background-color: #eee9e5;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.79);
+    padding: 20px;
+
+    margin-bottom: 15px;
+
+}
+
 
 input[type="text"] {
     width: 100%;
@@ -149,7 +208,52 @@ input[type="text"] {
     box-sizing: border-box;
 }
 
+input[type="checkbox"] {
+
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+}
+
 input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+input[type="date"] {
+    width: 102%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+}
+textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -185,44 +289,113 @@ select {
     box-sizing: border-box;
 }
 
+.color{
+    color: black;
+}
+
  button {
     padding: 5px 15px;
     border: none;
     border-radius: 5px;
+     background-color: #000000;
     color: white;
     cursor: pointer;
-background-color: black;
+
 }
 
-    button.update {
-    background-color: #13bb22;
+button.update:hover {
+background-color: #4290ce;
 }
 
-button.detail {
-    background-color: #17e3dc;
+button.detail:hover {
+    background-color: #8142ce;
 }
 
-button.delete {
-    background-color: #ff0018;
+button.delete:hover {
+    background-color: #ce4242;
 }
 
-button.unsubscribe {
-    background-color: #ff9600;
+button.unsubscribe:hover {
+    background-color: #c5ce42;
 }
-button.subscribe {
-    background-color: #e5d912;
-}
-
-button.publish {
-    background-color: #1b4cb7;
+button.subscribe:hover {
+    background-color: #55ce42;
 }
 
-button.ajout {
-    background-color: #e30f7d;
+button.publish:hover {
+    background-color: #ce7842;
+}
+
+button.ajout:hover {
+    background-color: #0c6c13;
 }
 
 
-a {
+button a {
     color: white;
     text-decoration: none;
 }
+a
+{
+    text-decoration: none;
+    color: black;
+}
+
+/*-----------------------------Margin------------------------------*/
+.margB45{
+    margin-bottom: 45px;
+}
+.margT45{
+    margin-top: 45px;
+}
+.margB15{
+    margin-bottom: 15px;
+}
+
+.margT15{
+    margin-top: 15px;
+}
+
+
+
+/*--------------------------------MesVariables---------------------------*/
+.centrage{
+    display: flex; /* Utilisation de flexbox pour centrer le contenu */
+    justify-content: center; /* Centrer le contenu horizontalement */
+    align-items: center; /* Centrer le contenu verticalement */
+    flex-direction: column; /* Afficher le contenu en colonne */
+}
+
+/*--------------------------------CHAPGPT-------------------------------*/
+.form-wrapper {
+    display: flex;
+
+}
+
+.form-field {
+    display: inline-block;
+    width: 102%;
+    margin-right: 15px; /* Ajoutez une marge entre les deux champs */
+}
+
+/*--------------------------------liste--------------------------------*/
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-bottom: 10px; /* Ajoute un espace de 10 pixels en bas de chaque élément <li> */
+}
+
+
+/*--------------------------------Titre--------------------------------*/
+
+h2 {
+
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+

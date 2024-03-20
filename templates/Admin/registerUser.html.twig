@@ -5,6 +5,7 @@
 {% block body %}
 
     <div class="back">
+
     {{ form_errors(form) }}
 
     {{ form_start(form) }}
@@ -15,15 +16,10 @@
     {{ form_row(form.prenom) }}
     {{ form_row(form.telephone) }}
     {{ form_row(form.siteId) }}
-    {% for users in user  %}
-        {% if users.siteId is not empty %}
-            <span>{{ users.siteId }}</span>
-        {% endif %}
-    {%endfor%}
-    {{ form_errors(form.password) }}
-    {{ form_row(form.password) }}
-    <button type="submit" class="btn">Register</button>
-
+    {{ form_row(form.password, {
+        label: 'Password'
+    }) }}
+    {{ form_row(form.agreeTerms) }}
     {{ form_end(form) }}
     </div>
 {% endblock %}

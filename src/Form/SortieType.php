@@ -48,14 +48,8 @@ class SortieType extends AbstractType
                 'label' => 'Lieu :',
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
+                'placeholder' => 'Veuillez choisir un lieu'
             ])
-            ->add('btnRegister', SubmitType::class, [
-                'label' => 'Enregistrer',
-            ])
-            ->add('btnPublish', SubmitType::class, [
-                'label' => 'Publier la sortie',
-            ]);
-
         ;
     }
 

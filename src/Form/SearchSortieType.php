@@ -16,19 +16,30 @@ class SearchSortieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
+        $builder->setMethod('GET')
             ->add('site', EntityType::class,[
                 'class'=>Site::class,
-                'choice_label' => 'Site'
+                'choice_label' => 'nom',
+                'required' => false
             ] )
-            ->add('nom', TextType::class)
+
+            ->add('site', EntityType::class, [
+                'class' => Site::class,
+                'choice_label' => 'nom',
+                'required' => false
+            ])
+            ->add('nom', TextType::class, [
+                'required'=> false
+            ])
             ->add('date_one', DateType::class, [
                 'label' => 'Entre',
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'required'=> false
             ])
             ->add('date_two', DateType::class, [
                 'label' => 'et',
-                'widget' => 'single_text'
+                'widget' => 'single_text',
+                'required'=> false
             ])
             ->add('sorties_orga', CheckboxType::class, [
                 'label' => 'Sorties dont je suis l\'organisateur/trice',

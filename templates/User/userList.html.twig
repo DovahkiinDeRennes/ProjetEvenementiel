@@ -7,7 +7,7 @@
 {% block body %}
 
 
-<div class="style">
+<div class="style back">
     <table >
         <thead>
         <tr>
@@ -24,8 +24,8 @@
                 <td>{{ user.nom }}</td>
                 <td>{{ user.prenom }}</td>
                 <td>{{ user.pseudo }}</td>
-
-                <td> <button class="delete"><a href="{{ url('user_desac',{'id': user.id }) }}">Annuler</a></button></td>
+                <td> <button class="delete"><a href="{{ url('user_supprime',{'id': user.id }) }}">supprimer</a></button></td>
+                <td> <button class="delete"><a href="{{ url('user_desac',{'id': user.id }) }}">Desactiver</a></button></td>
             </tr>
         {% endfor %}
         </tbody>
