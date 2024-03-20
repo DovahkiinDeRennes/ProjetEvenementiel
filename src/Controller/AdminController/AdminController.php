@@ -37,7 +37,7 @@ class AdminController extends AbstractController
     }
 
     #[Route(path: 'createPlace', name: 'createPlace')]
-    public function createPlaces(EntityManagerInterface $entityManager, Request $request){
+    public function createPlaces(EntityManagerInterface $entityManager, Request $request, Security $security){
 
         // on crée un nouveau lieu
         $places = new Lieu();
@@ -49,7 +49,13 @@ class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($places);
             $entityManager->flush();
-            return $this->redirectToRoute('admin_place');
+            if($security->getUser()->getRoles()[0] === 'ROLE_ADMIN')
+            {
+                return $this->redirectToRoute('admin_place');
+            }
+            else {
+                return $this->redirectToRoute('sortie_create');
+            }
         }
         return $this->render('Admin/createPlace.html.twig',['form' => $form->createView()]);
     }
@@ -143,7 +149,6 @@ class AdminController extends AbstractController
 
             $form->handleRequest($request);
 
-
             if ($form->isSubmitted()) {
 
                 $user->setActif(0);
@@ -155,7 +160,6 @@ class AdminController extends AbstractController
                         $form->get('password')->getData()
                     )
                 );
-
 
                 if ($form->get('picture_file')->getData() instanceof UploadedFile) {
                     $pictureFile = $form->get('picture_file')->getData();
@@ -172,14 +176,12 @@ class AdminController extends AbstractController
                     $user->setPicture($fileName);
                 }
 
-
                 $entityManager->persist($user);
                 $entityManager->flush();
 
                 // do anything else you need here, like send an email
 
                 return $this->redirectToRoute('user_list', ['users' => $user]);
-
             }
 
             return $this->render('/admin/registerUser.html.twig', [
