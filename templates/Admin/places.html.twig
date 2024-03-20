@@ -24,14 +24,14 @@
         <tbody>
         {% for place in places %}
             <tr>
-                <th scope="row">{{ place.id }}</th>
+                <td scope="row">{{ place.id }}</td>
                 {% if place.villeId is not empty %}
                     <td>  {{ place.villeId.nom }}</td>
                 {% endif %}
-                <td>{{ place.nom }}</td>
+                <td>  {{ place.nom }}</td>
                 <td>  {{ place.rue }}</td>
-                <td>  {{ place.latitude }}</td>
-                <td>  {{ place.longitude }}</td>
+                <td>  {{ place.latitude|number_format(0, '.', '')  }}</td>
+                <td>  {{ place.longitude|number_format(0, '.', '')  }}</td>
                 {% if is_granted('ROLE_ADMIN') %}
                     <td><a href="{{ url('admin_deletePlace', {'id': place.id }) }}"><img src="{{ asset('images/5.png') }}" class="image2"></a></td>
                     <td><a href="{{ url('admin_updatePlace', {'id': place.id}) }}"><img src="{{ asset('images/6.png') }}" class="image2"></a></td>
