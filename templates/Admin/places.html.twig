@@ -1,47 +1,49 @@
 {% extends "base.html.twig" %}
 
-{% block title %}{{ parent() }}: Accueil{% endblock %}
+{% block title %}Gérer les lieux{% endblock %}
 
 
 {% block body %}
-
-<div class="back">
-    <table >
-        <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Ville</th>
-            <th scope="col">Nom</th>
-            <th scope="col">Rue</th>
-            <th scope="col">Latitude</th>
-            <th scope="col">Longitude</th>
-            {% if is_granted('ROLE_ADMIN') %}
-                <th scope="col">Supprimez</th>
-                <th scope="col">Modifier</th>
-            {% endif %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for place in places %}
+    <h1>Gérer les lieux</h1>
+    <div class="back">
+        <table >
+            <thead>
             <tr>
-                <th scope="row">{{ place.id }}</th>
-                {% if place.villeId is not empty %}
-                    <td>  {{ place.villeId.nom }}</td>
-                {% endif %}
-                <td>{{ place.nom }}</td>
-                <td>  {{ place.rue }}</td>
-                <td>  {{ place.latitude }}</td>
-                <td>  {{ place.longitude }}</td>
+                <th scope="col">#</th>
+                <th scope="col">Ville</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Rue</th>
+                <th scope="col">Latitude</th>
+                <th scope="col">Longitude</th>
                 {% if is_granted('ROLE_ADMIN') %}
-                    <td><a href="{{ url('admin_deletePlace', {'id': place.id }) }}"><img src="{{ asset('images/5.png') }}" class="image2"></a></td>
-                    <td><a href="{{ url('admin_updatePlace', {'id': place.id}) }}"><img src="{{ asset('images/6.png') }}" class="image2"></a></td>
+                    <th scope="col">Supprimez</th>
+                    <th scope="col">Modifier</th>
                 {% endif %}
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <button class="ajout"><a href="{{ url('admin_createPlace') }}">Ajouter</a></button>
-</div>
+            </thead>
+            <tbody>
+            {% for place in places %}
+                <tr>
+                    <td scope="row">{{ place.id }}</td>
+                    <td>
+                    {% if place.villeId is not none %}
+                         {{ place.villeId.nom }}
+                    {% endif %}
+                    </td>
+                    <td>{{ place.nom }}</td>
+                    <td>  {{ place.rue }}</td>
+                    <td>  {{ place.latitude }}</td>
+                    <td>  {{ place.longitude }}</td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td><a href="{{ url('admin_deletePlace', {'id': place.id }) }}"><img src="{{ asset('images/5.png') }}" class="image2"></a></td>
+                        <td><a href="{{ url('admin_updatePlace', {'id': place.id}) }}"><img src="{{ asset('images/6.png') }}" class="image2"></a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <button class="ajout"><a href="{{ url('admin_createPlace') }}">Ajouter</a></button>
+    </div>
 {% endblock %}
 
 {% block js %}

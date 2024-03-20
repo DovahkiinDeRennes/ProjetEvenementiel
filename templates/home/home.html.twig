@@ -107,7 +107,7 @@
                            <a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}"><img src="{{ asset('images/3.png') }}" title="Se désinscire" class="image2"></a>
                         {% endif %}
 
-                        {% if sortie.organisateur is not null and app.user.id == sortie.organisateur.id %}
+                        {% if sortie.organisateur is not null and app.user.id == sortie.organisateur.id and sortie.etatId.id != 5  %}
                            <a href="{{ url('sortie_cancel', {'id': sortie.id }) }}"><img src="{{ asset('images/5.png') }}" title="Annuler" class="image2"></a>
                         {% endif %}
                         {#  Si d de la personne connectée != id sortie.organisateur #}

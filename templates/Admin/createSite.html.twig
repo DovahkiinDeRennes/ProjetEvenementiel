@@ -1,13 +1,15 @@
 {% extends "base.html.twig" %}
 
-{% block title %}{{ parent() }}: Accueil{% endblock %}
+{% block title %}Créer un site{% endblock %}
 
 
 {% block body %}
-<div class="back">
-    {{ form_start(form) }}
-    {{ form_end(form) }}
-</div>
+
+    <h1>Créer un site</h1>
+    <div class="back">
+        {{ form_start(form) }}
+        {{ form_end(form) }}
+    </div>
 
 {% endblock %}
 

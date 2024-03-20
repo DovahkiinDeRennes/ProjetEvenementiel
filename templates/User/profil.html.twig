@@ -1,24 +1,26 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}
+    Modifier mon profil
+{% endblock %}
 {% block body %}
 
     <div class="back">
-    <h2>{{user.pseudo }}</h2>
+    <h1>{{user.pseudo }}</h1>
 
     <img class="image" src="{% if user.picture is not empty %}
                                 {{ asset('uploads/'~ user.picture) }}
                             {% else %}
                                 {{ asset('images/chatprofil.png') }}
                             {% endif %}" alt="Photo de profil">
-<nav class="profil margT15">
-    <ul>
-        <li> <span>{{ user.prenom }}</span></li>
-        <li> {{ user.nom }}</li>
-        <li> {{ user.telephone }}</li>
-        <li> {{ user.email }}</li>
-        <li> {{ user.siteId.nom }}</li>
-    </ul>
-</nav>
+    <div class="profil margT15">
+        <ul>
+            <li> <span>{{ user.prenom }}</span></li>
+            <li> {{ user.nom }}</li>
+            <li> {{ user.telephone }}</li>
+            <li> {{ user.email }}</li>
+            <li> {{ user.siteId.nom }}</li>
+        </ul>
+    </div>
     <button><a href="{{ url('home_home') }}">Retour</a></button>
     </div>
 {% endblock %}
