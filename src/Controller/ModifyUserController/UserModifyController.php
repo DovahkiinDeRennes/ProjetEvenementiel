@@ -82,7 +82,6 @@ class UserModifyController extends AbstractController
             $users->setActif(true);
             $users->setNom($anom);
             $users->setPrenom($anom);
-            $users->setPseudo($anom);
             $users->setPassword($anom);
             $users->setTelephone($anom);
             $users->setPicture($anom);
