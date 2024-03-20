@@ -4,6 +4,7 @@
 
 
 {% block body %}
+    <div class="col-t4 col-12">
     <form class="back">
        {{ form_start(searchForm) }}
 
@@ -83,27 +84,30 @@
 
                     <td> {{ count[sortie.id] }}</td>
                     <td>
-                        <a href="{{ url('user_profil',{'id': sortie.organisateur.id}) }}">{% if sortie.organisateur is not empty %}{{ sortie.organisateur.pseudo }} {% endif %}</a>
+                        {% if sortie.organisateur is not null %}
+                            <a href="{{ url('user_profil', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a>
+                        {% endif %}
+{#                        <a href="{{ url('user_profil',{'id': sortie.organisateur.id}) }}">{% if sortie.organisateur is not empty %}{{ sortie.organisateur.pseudo }} {% endif %}</a>#}
                     </td>
 
                     <td>
                         {%if sortie.etatId != null and sortie.etatId.id == 3 %}
                         {# si etat = création ET id de la personne connectée = id sortie.organisateur #}
-                      <a href="{{ url('sortie_update',{'id':sortie.id}) }}"><img src="{{ asset('images/6.png') }}" class="image2"></a>
-                        <a href="{{ url('sortie_newEtat', {'id':sortie.id}) }}"><img src="{{ asset('images/7.png') }}" class="image2"></a>
+                      <a href="{{ url('sortie_update',{'id':sortie.id}) }}"><img src="{{ asset('images/6.png')}}"  title="Modifier" class="image2"></a>
+                        <a href="{{ url('sortie_newEtat', {'id':sortie.id}) }}"><img src="{{ asset('images/7.png') }}" title="Publier" class="image2"></a>
                         {% else %}
-                        <a href="{{ url('sortie_detail', {'id':sortie.id}) }}"><img src="{{ asset('images/1.png') }}" class="image2"></a>
+                        <a href="{{ url('sortie_detail', {'id':sortie.id}) }}"><img src="{{ asset('images/1.png') }}" title="Afficher" class="image2"></a>
                         {% endif %}
 
                         {% if sortie.etatId != null and sortie.etatId.id == 4 and sortie not in user.getSorties() %}
-                          <a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}"><img src="{{ asset('images/4.png') }}" class="image2"></a>
+                          <a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}"><img src="{{ asset('images/4.png') }}" title="S'inscrire" class="image2"></a>
 
                         {% elseif sortie.etatId != null and sortie.etatId.id == 4 and sortie in user.getSorties() %}
-                           <a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}"><img src="{{ asset('images/3.png') }}" class="image2"></a>
+                           <a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}"><img src="{{ asset('images/3.png') }}" title="Se désinscire" class="image2"></a>
                         {% endif %}
 
                         {% if sortie.organisateur is not null and app.user.id == sortie.organisateur.id %}
-                           <a id="boutonAction" href="{{ url('sortie_cancel', {'id': sortie.id }) }}"><img src="{{ asset('images/5.png') }}" class="image2" ></a>
+                           <a href="{{ url('sortie_cancel', {'id': sortie.id }) }}"><img src="{{ asset('images/5.png') }}" title="Annuler" class="image2"></a>
                         {% endif %}
                         {#  Si d de la personne connectée != id sortie.organisateur #}
                         {# Si inscrit #}
