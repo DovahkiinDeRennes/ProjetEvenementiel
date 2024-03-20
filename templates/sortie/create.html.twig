@@ -5,15 +5,57 @@
 {% block body %}
     <div class="back">
         <form method="post">
-            {{ form_widget(sortieForm) }}
+            {{ form_start(sortieForm) }}
+            {{ form_row(sortieForm.nom) }}
+            {{ form_row(sortieForm.dateHeureDebut) }}
+            {{ form_row(sortieForm.dateLimiteInscription) }}
+            {{ form_row(sortieForm.nbInscriptionMax) }}
+            {{ form_row(sortieForm.duree) }}
+            {{ form_row(sortieForm.description) }}
+            {{ form_row(sortieForm.lieuId) }}
+            <div id="info-lieu"></div>
+
+            {{ form_end(sortieForm) }}
+
             <input type="hidden" name="etat_draft" value="1">
             <input type="hidden" name="etat_published" value="2">
             <a href="{{ url('admin_createPlace') }}">Ajouter un lieu</a>
             <button type="submit" name="draft">Enregistrer comme brouillon</button>
             <button type="submit" name="publish">Publier</button>
+
+            <script>
+                document.getElementById('sortie_lieuId').addEventListener('change', function() {
+                    var lieuId = this.value;
+                    getInfoLieu(lieuId);
+                });
+
+                function getInfoLieu(lieuId){
+                    fetch("{{ path('lieu_info',{'id': 'PLACEHOLDER'}) }}".replace('PLACEHOLDER',lieuId))
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data);
+                            document.getElementById('info-lieu').innerHTML = `
+<nav>
+<ul>
+
+           <li>Rue: ${data.rue}</li>
+            <li>Ville: ${data.ville}</li>
+            <li>Code Postal: ${data.codepostal}</li>
+            <li>Latitude: ${data.latitude}</li>
+           <li>Longitude: ${data.longitude}</li>
+</ul>
+</nav>
+        `;
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+
+
+            </script>
         </form>
 
         <a href="{{ url('home_home') }}">Annuler</a>
 
     </div>
+
 {% endblock %}
