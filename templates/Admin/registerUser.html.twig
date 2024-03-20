@@ -3,7 +3,8 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Enregistrement d'un nouvel utilisateur</h1>
+
+    <div class="back">
 
     {{ form_errors(form) }}
 
@@ -20,4 +21,5 @@
     }) }}
     {{ form_row(form.agreeTerms) }}
     {{ form_end(form) }}
+    </div>
 {% endblock %}

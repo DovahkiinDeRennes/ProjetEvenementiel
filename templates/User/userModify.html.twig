@@ -3,8 +3,8 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Modification</h1>
 
+    <div class="back">
     {{ form_errors(form) }}
 
     {{ form_start(form) }}
@@ -23,5 +23,7 @@
     {{ form_errors(form.password) }}
     {{ form_row(form.password) }}
     <button type="submit" class="btn">Register</button>
+
     {{ form_end(form) }}
+    </div>
 {% endblock %}

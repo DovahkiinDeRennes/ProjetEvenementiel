@@ -75,7 +75,8 @@
     </div>
 
 </header>
-<body>
+<body >
+<div class="centrage">
 <div class="container">
     {% for label, messages in app.flashes %}
         {% for message in messages %}
@@ -88,6 +89,7 @@
 <div class="style">
 {% block body %}
 {% endblock %}
+</div>
 </div>
 </body>
 <footer class="margT45">

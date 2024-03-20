@@ -2,6 +2,7 @@
 
 {% block body %}
 
+    <div class="back">
     <h2>{{user.pseudo }}</h2>
 
     <img class="image" src="{% if user.picture is not empty %}
@@ -9,13 +10,15 @@
                             {% else %}
                                 {{ asset('images/chatprofil.png') }}
                             {% endif %}" alt="Photo de profil">
+<nav class="profil margT15">
     <ul>
-        <li> {{ user.prenom }}</li>
+        <li> <span>{{ user.prenom }}</span></li>
         <li> {{ user.nom }}</li>
         <li> {{ user.telephone }}</li>
         <li> {{ user.email }}</li>
         <li> {{ user.siteId.nom }}</li>
     </ul>
+</nav>
     <button><a href="{{ url('home_home') }}">Retour</a></button>
-
+    </div>
 {% endblock %}

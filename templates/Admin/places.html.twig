@@ -5,7 +5,7 @@
 
 {% block body %}
 
-<div class="pad">
+<div class="back">
     <table >
         <thead>
         <tr>
@@ -33,8 +33,8 @@
                 <td>  {{ place.latitude }}</td>
                 <td>  {{ place.longitude }}</td>
                 {% if is_granted('ROLE_ADMIN') %}
-                    <td> <button class="delete"><a href="{{ url('admin_deletePlace', {'id': place.id }) }}">Supprimer</a></button></td>
-                    <td><button class="update"><a href="{{ url('admin_updatePlace', {'id': place.id}) }}">Modifier</a></button></td>
+                    <td><a href="{{ url('admin_deletePlace', {'id': place.id }) }}"><img src="{{ asset('images/5.png') }}" class="image2"></a></td>
+                    <td><a href="{{ url('admin_updatePlace', {'id': place.id}) }}"><img src="{{ asset('images/6.png') }}" class="image2"></a></td>
                 {% endif %}
             </tr>
         {% endfor %}
