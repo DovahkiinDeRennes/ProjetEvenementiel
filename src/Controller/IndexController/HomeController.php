@@ -26,6 +26,7 @@ class HomeController extends  AbstractController
     {
         $this->MiseAjourSortie = $MiseAjourSortie;
     }
+
     #[Route(path: '', name: 'home', methods: ['GET', 'POST'])]
     public function home(Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, Security $security, MiseAjourSortie $MiseAjourSortie): Response
     {
@@ -34,6 +35,7 @@ class HomeController extends  AbstractController
         if ($security->isGranted('IS_AUTHENTICATED')) {
             $userId = $this->getUser()->getId();
             $user = $entityManager->getRepository(User::class)->find($userId);
+
 
             // La page s'affiche si on est un utilisateur connecté
             if ($user && !$user->getActif()) {
@@ -59,17 +61,29 @@ class HomeController extends  AbstractController
                     $count[$sortie->getId()] = $sortie->getUsers()->count();
                 }
 
+                // Inscrit ? ('x')
+                $isRegistered = [];
+                $inscrit = '';
+                foreach ($sortiesToDisplay as $sortie) {
+                    $isRegistered[$sortie->getId()] = $sortie->getUsers()->contains($user);
+                    if ($isRegistered[$sortie->getId()]) {
+                        $inscrit= 'x';
+                    }
+                }
+
                 return $this->render('home/home.html.twig', [
                     'sorties' => $sortiesToDisplay,
                     'count' => $count,
-
+                    'isRegistered' => $isRegistered,
+                    'inscrit' => $inscrit,
                     'searchForm' => $searchForm->createView(),
                     'user' => $user
                 ]);
-            } else {
-                return $this->render('user/actif.html.twig');
             }
-        }else{
+            else {
+                    return $this->render('user/actif.html.twig');
+            }
+        } else {
             // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
             return $this->redirectToRoute('app_login');
         }
