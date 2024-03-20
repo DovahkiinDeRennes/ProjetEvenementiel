@@ -2,13 +2,13 @@
 
 /*-----------------------------Header------------------------------*/
 header {
-    background-color: #29292d;
+    background-color: #eee9e5;
     width: auto;
     height: 150px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: #ffffff;
+    color: black;
    /* background-image: url("../images/6.gif");
     background-position: center;
     background-repeat: no-repeat;
@@ -37,11 +37,13 @@ header nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
+
 }
 
 header nav li {
     display: inline;
     margin-right: 10px;
+
 
 }
 header nav li a{
@@ -68,6 +70,18 @@ header nav li a{
     border-radius: 50%;
     box-shadow : 0 0 20px rgba(0, 0, 0, 0.79);
 }
+
+.image2{
+    width: 45px;
+    height: 45px;
+
+}
+
+
+td.image2 {
+    margin: 0;
+}
+
 .size{
     font-size: 50px;
 }
@@ -116,17 +130,23 @@ footer {
 
 }
 
-body {
+main{
+    margin: auto 0;
     height: auto;
-    background-color: #9db2b2;
+}
+body {
+    margin: auto 0;
+    height: auto;
+    background-color: #ffffff;
     justify-content: space-between;
     padding-bottom: 75px;
-    background-image: url("../images/2.jpg");
+    margin-bottom: 45px;
+   /* background-image: url("../images/2.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    margin-bottom: 45px;
 
+*/
 
 }
 
@@ -138,37 +158,43 @@ p{
 
 table {
     margin-top: 15px;
-
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
-    background-color: #ffffff;
     border-radius: 5px;
     overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.79);
     color: black;
     margin-bottom: 15px;
 }
 
 th, td {
 
-    padding: 5px;
+    padding: 10px;
     text-align: left;
 }
 
 
 tr.test:hover {
-    background-color: #eeb437;
-    color: #f3f3f3;
+    background-color: #efd697;
+    color: #000000;
 }
+
+ td a {
+    color: black;
+     text-decoration: none;
+}
+
+
 
 /*-----------------------------Form------------------------------*/
 
 .back{
-    backdrop-filter: blur(10px);
+background-color: #eee9e5;
     border-radius: 5px;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.79);
     padding: 20px;
+
+    margin-bottom: 15px;
 
 }
 
@@ -180,6 +206,16 @@ input[type="text"] {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
+}
+
+input[type="checkbox"] {
+
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+
 }
 
 input[type="email"] {
@@ -206,6 +242,16 @@ input[type="datetime-local"] {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
+}
+
+input[type="date"] {
+    width: 102%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+
 }
 textarea {
     width: 100%;
@@ -281,13 +327,18 @@ button.publish:hover {
 }
 
 button.ajout:hover {
-    background-color: #4290ce;
+    background-color: #0c6c13;
 }
 
 
-a {
+button a {
     color: white;
     text-decoration: none;
+}
+a
+{
+    text-decoration: none;
+    color: black;
 }
 
 /*-----------------------------Margin------------------------------*/
@@ -301,18 +352,50 @@ a {
     margin-bottom: 15px;
 }
 
-.margB15{
+.margT15{
+    margin-top: 15px;
+}
+
+
+
+/*--------------------------------MesVariables---------------------------*/
+.centrage{
+    display: flex; /* Utilisation de flexbox pour centrer le contenu */
+    justify-content: center; /* Centrer le contenu horizontalement */
+    align-items: center; /* Centrer le contenu verticalement */
+    flex-direction: column; /* Afficher le contenu en colonne */
+}
+
+/*--------------------------------CHAPGPT-------------------------------*/
+.form-wrapper {
+    display: flex;
+
+}
+
+.form-field {
+    display: inline-block;
+    width: 102%;
+    margin-right: 15px; /* Ajoutez une marge entre les deux champs */
+}
+
+/*--------------------------------liste--------------------------------*/
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-bottom: 10px; /* Ajoute un espace de 10 pixels en bas de chaque élément <li> */
+}
+
+
+/*--------------------------------Titre--------------------------------*/
+
+h2 {
+
+    margin-top: 15px;
     margin-bottom: 15px;
 }
 
-.margB15{
-    margin-bottom: 15px;
-}
-
-.margB15{
-    margin-bottom: 15px;
-}
-
-.margB15{
-    margin-bottom: 15px;
-}

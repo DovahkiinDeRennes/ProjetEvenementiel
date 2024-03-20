@@ -4,7 +4,7 @@
 
 
 {% block body %}
-<div class="pad">
+<div class="back">
     <table>
         <thead>
         <tr>
@@ -23,8 +23,8 @@
 
                 <td>{{ site.nom }}</td>
                 {% if is_granted('ROLE_ADMIN') %}
-                <td> <button class="delete"><a href="{{ url('admin_deleteSite', {'id': site.id }) }}">Supprimer</a></button></td>
-                    <td><button class="update"><a href="{{ url('admin_updateSite', {'id': site.id}) }}">Modifier</a></button></td>
+                <td> <a href="{{ url('admin_deleteSite', {'id': site.id }) }}"><img src="{{ asset('images/5.png') }}" class="image2"></a></td>
+                    <td><a href="{{ url('admin_updateSite', {'id': site.id}) }}"><img src="{{ asset('images/6.png') }}" class="image2"></a></td>
                 {% endif %}
             </tr>
         {% endfor %}

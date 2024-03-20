@@ -48,6 +48,7 @@ class SortieType extends AbstractType
                 'label' => 'Lieu :',
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
+                'placeholder' => 'Veuillez choisir un lieu'
             ])
         ;
     }
