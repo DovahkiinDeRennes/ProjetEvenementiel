@@ -245,7 +245,7 @@ class AdminController extends AbstractController
                                  $errorMessages[] = $errorMessage;
                              }
                              $errorMessageString = implode("<br>", $errorMessages);
-                             $this->addFlash('alert', 'Echec création de comptes:<br>' . $errorMessageString);
+                             $this->addFlash('errorCSV', 'Echec création de comptes:<br>' . $errorMessageString);
                          }else{
                              $entityManager->persist($user);
                              $entityManager->flush();
