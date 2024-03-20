@@ -208,58 +208,57 @@ class AdminController extends AbstractController
                 if($csvFile['list_of_users'] instanceof UploadedFile)
                 {
                     //Decoder le CSV : transformer le csv en Array
-                 $users = $serializer->decode(file_get_contents($csvFile['list_of_users']->getPathname()), 'csv');
+                     $users = $serializer->decode(file_get_contents($csvFile['list_of_users']->getPathname()), 'csv');
 
-                 foreach ($users as $newUser){
+                     foreach ($users as $newUser){
 
-                     //Denormalize : transformer le Array en Object
-                     $user = $serializer->denormalize($newUser, User::class);
+                         //Denormalize : transformer le Array en Object
+                         $user = $serializer->denormalize($newUser, User::class);
 
-                     //Valider l'Objet utilisateur
-                     $constraintErrors = $validator->validate($user);
+                         $user->setEmail($newUser['email']);
+                         $user->setPseudo($newUser['pseudo']);
+                         $user->setNom($newUser['nom']);
+                         $user->setPrenom($newUser['prenom']);
+                         $user->setTelephone($newUser['telephone']);
 
-                     if(count($constraintErrors)>0){
+                         $site = $entityManager->getRepository(Site::class)->findOneBy(['nom' => $newUser['site']]);
+                         $user->setSiteId($site);
 
-                         $errorMessages=[];
+                         $user->setActif(0);
+                         $user->setRoles(['ROLE_USER']);
+                         // encode the plain password
+                         $user->setPassword(
+                             $userPasswordHasher->hashPassword(
+                                 $user,
+                                 $newUser['password']
+                             )
+                         );
 
-                         foreach ($constraintErrors as $error){
-                             $errorMessage = $error->getMessage();
-                             $errorMessages[] = $errorMessage;
+                         //Valider l'Objet utilisateur
+                         $constraintErrors = $validator->validate($user);
+
+                         if(count($constraintErrors) > 0){
+                             $errorMessages=[];
+
+                             foreach ($constraintErrors as $error){
+                                 $errorMessage = $error->getMessage();
+                                 $errorMessages[] = $errorMessage;
+                             }
+                             $errorMessageString = implode("<br>", $errorMessages);
+                             $this->addFlash('alert', 'Echec création de comptes:<br>' . $errorMessageString);
+                         }else{
+                             $entityManager->persist($user);
+                             $entityManager->flush();
+                             $this->addFlash('success', 'Création de comptes réalisée avec succès !');
                          }
+                         return $this->redirectToRoute('user_list');
+
                      }
 
-                     $user->setEmail($newUser['email']);
-                     $user->setPseudo($newUser['pseudo']);
-                     $user->setNom($newUser['nom']);
-                     $user->setPrenom($newUser['prenom']);
-                     $user->setTelephone($newUser['telephone']);
-
-                     $site = $entityManager->getRepository(Site::class)->findOneBy(['nom' => $newUser['site']]);
-                     $user->setSiteId($site);
-
-                     $user->setActif(0);
-                     $user->setRoles(['ROLE_USER']);
-                     // encode the plain password
-                     $user->setPassword(
-                         $userPasswordHasher->hashPassword(
-                             $user,
-                             $newUser['password']
-                         )
-                     );
-
-                     $entityManager->persist($user);
-                 }
-
-             $entityManager->flush();
+                }
 
             }
-                $this->addFlash('success', 'Créations de comptes réalisée avec succès !');
-                return $this->redirectToRoute('user_list');
-            }
-            //else{
-            //    $this->addFlash('alert', 'Créations de comptes réalisée avec succès !');
-//                return $this->redirectToRoute('home_home');
-//            }
+
 
 
         return $this->render('/admin/registerUsers.html.twig', [
