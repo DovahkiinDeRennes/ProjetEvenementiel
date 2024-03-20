@@ -81,7 +81,9 @@
 
                     <td> {% if sortie.etatId  is not empty %}{{ sortie.etatId.libelle }}{% endif %}</td>
 
-                    <td> {{ count[sortie.id] }}</td>
+                    <td>{% if isRegistered[sortie.id] %}
+                            {{ inscrit }}
+                        {% endif %}</td>
                     <td>
                         {% if sortie.organisateur is not null %}
                             <a href="{{ url('user_profil', {'id': sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a>
@@ -98,15 +100,18 @@
                         <a href="{{ url('sortie_detail', {'id':sortie.id}) }}"><img src="{{ asset('images/1.png') }}" title="Afficher" class="image2"></a>
                         {% endif %}
 
-                        {% if sortie.etatId != null and sortie.etatId.id == 4 and sortie not in user.getSorties() %}
+                        {% if sortie.etatId != null and sortie.etatId.id == 4 and sortie not in user.getSorties and sortie.organisateur != user %}
                           <a href="{{ url('sortie_suscribe', {'id': sortie.id }) }}"><img src="{{ asset('images/4.png') }}" title="S'inscrire" class="image2"></a>
 
                         {% elseif sortie.etatId != null and sortie.etatId.id == 4 and sortie in user.getSorties() %}
                            <a href="{{ url('sortie_unsuscribe', {'id': sortie.id }) }}"><img src="{{ asset('images/3.png') }}" title="Se désinscire" class="image2"></a>
                         {% endif %}
 
-                        {% if sortie.organisateur is not null and app.user.id == sortie.organisateur.id and sortie.etatId.id != 5  %}
+
+                        {% if sortie.id is not null and sortie.etatId.id != 2 and sortie.etatId.id != 5 and sortie.etatId.id != 6 %}
+                        {% if app.user.id == sortie.organisateur.id or is_granted('ROLE_ADMIN') %}
                            <a href="{{ url('sortie_cancel', {'id': sortie.id }) }}"><img src="{{ asset('images/5.png') }}" title="Annuler" class="image2"></a>
+                        {% endif %}
                         {% endif %}
                         {#  Si d de la personne connectée != id sortie.organisateur #}
                         {# Si inscrit #}
@@ -118,7 +123,6 @@
                         {# endif #}
 
                     </td>
-                    <td> </td>
                 </tr>
             {% endfor %}
             </tbody>
