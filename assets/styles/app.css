@@ -399,3 +399,24 @@ h2 {
     margin-bottom: 15px;
 }
 
+/*--------------------------------MESSAGE SUCCES/ERRORS---------------------------*/
+.alert-success{
+    background-color: green;
+    color: white;
+}
+
+.alert-danger{
+    background-color: red;
+    color: white;
+}
+
+.alert{
+    text-align: center;
+    height: 75px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-size: 30px;
+    color: #ffffff;
+    margin-bottom: 25px;
+}

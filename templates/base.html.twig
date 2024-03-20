@@ -82,16 +82,18 @@
 
 </header>
 <body >
-<div class="centrage">
-<div class="container">
-    {% for label, messages in app.flashes %}
+<div class="message">
+    {% for type, messages in app.flashes %}
         {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message | raw }}
+            <div class="alert alert-{{ type }}">
+                {{ message }}
             </div>
         {% endfor %}
     {% endfor %}
 </div>
+<div class="centrage">
+<div class="container">
+
 <div class="style">
 {% block body %}
 {% endblock %}
