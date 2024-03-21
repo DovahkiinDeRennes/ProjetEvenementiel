@@ -4,7 +4,8 @@
 
 
 {% block body %}
-    <div class="col-t4 col-12">
+<h1>Filtrer les sorties</h1>
+<div class="col-t4 col-12">
     <form class="back">
        {{ form_start(searchForm) }}
 
@@ -72,7 +73,7 @@
             <tbody>
             {% for sortie in sorties %}
                 <tr class="test">
-                    <td style="font-size: 25px; text-align: left;">{{ sortie.nom }}</td>
+                    <td style="font-size: 20px; text-align: left;">{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('Y-m-d H:i') }}</td>
                     <td>{% if sortie.site  is not empty %}{{ sortie.site.nom }}{% endif %}</td>
                     <td>{{ sortie.dateLimiteInscription | date('Y-m-d') }}</td>

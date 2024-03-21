@@ -4,7 +4,7 @@
 header {
     background-color: #eee9e5;
     /*width: auto;*/
-    height: 250px;
+    height: 150px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -84,7 +84,7 @@ td.image2 {
 }
 
 .size{
-    font-size: 70px;
+    font-size: 50px;
 }
 .left-content {
     display: flex;
@@ -114,6 +114,13 @@ footer {
 
 
 /*-----------------------------Body------------------------------*/
+h1 {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 30px;
+}
+
 .toto{
     min-height: 76vh;
     flex-grow: 1;
@@ -127,7 +134,7 @@ footer {
 
 @font-face {
     font-family: 'maNouvellePolice';
-    src: url('../fonts/B.otf') format('truetype');
+    src: url('../fonts/KGRedHands.ttf') format('truetype');
 
 }
 
@@ -167,12 +174,16 @@ table {
     margin-bottom: 15px;
 }
 
+th {
+    font-size: 20px;
+}
+
 th, td {
 
     padding: 10px;
     /*text-align: left;*/
     text-align: center;
-    font-size: 20px;
+    /*font-size: 20px;*/
 }
 
 
