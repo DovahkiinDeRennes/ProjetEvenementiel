@@ -188,6 +188,15 @@ class SortieController extends AbstractController
         if ($user->getId() == $sortie->getOrganisateur()->getId()) {
             if ($form->isSubmitted() && $form->isValid()) {
 
+                if ($request->request->has('draft')) {
+                    $etatId = 3; // ID de l'état "Brouillon"
+                } elseif ($request->request->has('publish')) {
+                    $etatId = 4; // ID de l'état "Publié"
+                }
+
+                // Mettre à jour l'état de la sortie
+                $etat = $em->getRepository(Etat::class)->find($etatId);
+                $sortie->setEtatId($etat);
 
                 $em->persist($sortie);
 
