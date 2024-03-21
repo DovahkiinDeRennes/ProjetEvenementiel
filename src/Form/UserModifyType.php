@@ -25,6 +25,7 @@ class UserModifyType extends AbstractType
             ->add('prenom')
             ->add('telephone')
             ->add('siteId', EntityType::class, [
+                'label' => 'Site',
                 'class' => Site::class,
                 'choice_label' => 'nom',
             ])
