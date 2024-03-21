@@ -57,7 +57,7 @@
         <table class="">
             <thead>
             <tr>
-                <th>Nom de la sortie</th>
+                <th style="text-align: left;">Nom de la sortie</th>
                 <th>Date de la sortie</th>
                 <th>Site</th>
                 <th>Clôture</th>
@@ -66,12 +66,13 @@
                 <th>Inscrit</th>
                 <th>Organisateur</th>
                 <th>Actions</th>
+
             </tr>
             </thead>
             <tbody>
             {% for sortie in sorties %}
                 <tr class="test">
-                    <td>{{ sortie.nom }}</td>
+                    <td style="font-size: 25px; text-align: left;">{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('Y-m-d H:i') }}</td>
                     <td>{% if sortie.site  is not empty %}{{ sortie.site.nom }}{% endif %}</td>
                     <td>{{ sortie.dateLimiteInscription | date('Y-m-d') }}</td>

@@ -3,8 +3,8 @@
 /*-----------------------------Header------------------------------*/
 header {
     background-color: #eee9e5;
-    width: auto;
-    height: 150px;
+    /*width: auto;*/
+    height: 250px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -22,17 +22,18 @@ header {
     align-items: center;
     justify-content: space-between;
     padding: 0 20px; /* Ajout de padding pour l'espacement */
-    width: 100%; /* Ajustement de la largeur */
+    flex-direction: row;
+    /*width: 100%; !* Ajustement de la largeur *!*/
 }
 .left-content {
     display: flex;
     align-items: center;
 }
-.header-content {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-}
+/*.header-content {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    flex-direction: row;*/
+/*}*/
 header nav ul {
     list-style-type: none;
     margin: 0;
@@ -57,7 +58,7 @@ header nav li a{
     justify-content: space-between;
 }
 .pad{
-    margin-left: 200px;
+    margin-left: 80px;
 }
 
 .pad2{
@@ -83,7 +84,7 @@ td.image2 {
 }
 
 .size{
-    font-size: 50px;
+    font-size: 70px;
 }
 .left-content {
     display: flex;
@@ -126,7 +127,7 @@ footer {
 
 @font-face {
     font-family: 'maNouvellePolice';
-    src: url('../fonts/KGRedHands.ttf') format('truetype');
+    src: url('../fonts/B.otf') format('truetype');
 
 }
 
@@ -169,7 +170,9 @@ table {
 th, td {
 
     padding: 10px;
-    text-align: left;
+    /*text-align: left;*/
+    text-align: center;
+    font-size: 20px;
 }
 
 
