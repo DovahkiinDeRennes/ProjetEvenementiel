@@ -6,6 +6,7 @@
 
 {% block body %}
     <h1>Inscrire des membres</h1>
+    <div class="back">
     {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
     <div>
         {{ form_label(form.list_of_users) }}
@@ -13,4 +14,5 @@
         {{ form_errors(form.list_of_users) }}
     </div>
     {{ form_end(form) }}
+    </div>
 {% endblock %}
