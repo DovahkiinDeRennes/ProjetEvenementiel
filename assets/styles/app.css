@@ -410,6 +410,16 @@ h2 {
     color: white;
 }
 
+.alert-warning{
+    background-color: #ff6a00;
+    color: white;
+}
+
+.alert-error{
+    background-color: red;
+    color: white;
+}
+
 .alert{
     text-align: center;
     height: 75px;

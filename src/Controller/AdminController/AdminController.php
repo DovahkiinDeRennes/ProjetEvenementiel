@@ -259,8 +259,6 @@ class AdminController extends AbstractController
 
             }
 
-
-
         return $this->render('/admin/registerUsers.html.twig', [
             'form'=>$form
         ]);

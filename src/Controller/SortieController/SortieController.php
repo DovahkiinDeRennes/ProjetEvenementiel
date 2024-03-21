@@ -89,12 +89,14 @@ class SortieController extends AbstractController
                 $em->persist($sortie);
 
                 $em->flush();
+                $this->addFlash('success', 'La sortie a bien été publie.');
             }
         }
+        else {
+            $this->addFlash('error', 'Vous ne pouvez pas publier une sortie dont vous n\'estiez pas l\'organisateur.');
+        }
+
         // Récupérer la sortie avec son id
-
-
-
         return $this->redirectToRoute('home_home');
     }
 
@@ -162,9 +164,10 @@ class SortieController extends AbstractController
         // devine ça fait quoi ça???? allez 1, 2, 3, flop.... la fonction removeSorty dans ENTITY User (le contraire de addSorty)
         // On verifie l'etat + la date de cloture
 
-                if ($user->getSorties()) {
-                    $user->removeSorty($sortie);
-                    $em->flush();
+        if ($user->getSorties()) {
+            $user->removeSorty($sortie);
+            $em->flush();
+            $this->addFlash('warning', 'Vous vous êtes désinscrit de la sortie avec succès.');
         }
         return $this->redirectToRoute('home_home');
     }

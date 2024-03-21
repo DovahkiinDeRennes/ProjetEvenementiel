@@ -92,7 +92,7 @@
                     </td>
 
                     <td>
-                        {%if sortie.etatId != null and sortie.etatId.id == 3 %}
+                        {%if sortie.organisateur == user and sortie.etatId != null and sortie.etatId.id == 3 %}
                         {# si etat = création ET id de la personne connectée = id sortie.organisateur #}
                       <a href="{{ url('sortie_update',{'id':sortie.id}) }}"><img src="{{ asset('images/6.png')}}"  title="Modifier" class="image2"></a>
                         <a href="{{ url('sortie_newEtat', {'id':sortie.id}) }}"><img src="{{ asset('images/7.png') }}" title="Publier" class="image2"></a>
