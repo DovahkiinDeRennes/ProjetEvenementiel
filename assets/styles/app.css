@@ -15,7 +15,6 @@ header {
     background-size: cover;*/
     box-shadow : 0 0 20px rgba(0, 0, 0, 0.79);
     padding: 20px;
-
 }
 .header-content {
     display: flex;
