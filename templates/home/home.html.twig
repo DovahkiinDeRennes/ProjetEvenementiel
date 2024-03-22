@@ -124,7 +124,7 @@
         </div>
     </div>
         <div class="enBas">
-        {% set nbPages = (count2 / maxPerPage)|round(0,'ceil') %}
+            {% set nbPages = (count2 / maxPerPage)|round(0,'ceil') %}
         <nav>
             <ul class="pagination justify-content-center">
                 <li class="page-item {% if app.request.get('p') <= 1 %}disabled{% endif %}"><a class="page-link" href="{{ url('home_home', {'p': app.request.get('p') - 1}) }}">Previous</a></li>

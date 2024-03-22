@@ -39,13 +39,13 @@ class HomeController extends  AbstractController
 
 
             if (!$security->isGranted('ROLE_BANNED')) {
-                $maxPerPage = 5;
+                $maxPerPage = 4;
 
                 if (($page = $request->query->get('p', 1)) < 1) {
                     return $this->redirectToRoute('home_home');
                 }
 //                $count2 = $entityManager->getRepository(Wish::class)->count(['' => true]);
-                $count2 = $entityManager->getRepository(Sortie::class)->count([]);
+                $count2 = $entityManager->getRepository(Sortie::class)->count();
                 $sorties = $sortieRepository->findAllEvents($maxPerPage,$page);
 
                 // Vérification de la page
