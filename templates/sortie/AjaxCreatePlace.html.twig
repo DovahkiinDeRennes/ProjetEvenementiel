@@ -1,0 +1,25 @@
+
+
+<form id="creation-lieu-form">
+    <label for="nom">Nom:</label>
+    <input type="text" id="nom" name="nom" value="" required><br>
+
+    <label for="rue">Rue:</label>
+    <input type="text" id="rue" name="rue" value="" required><br>
+
+    <label for="latitude">Latitude:</label>
+    <input type="text" id="latitude" name="latitude" value="" required><br>
+
+    <label for="longitude">Longitude:</label>
+    <input type="text" id="longitude" name="longitude" value="" required><br>
+
+    <label for="villeId">Ville:</label>
+    <select name="villeId">
+        {% for ville in villes %}
+            <option value="{{ ville.id }}">{{ ville.nom }}</option>
+        {% endfor %}
+    </select>
+
+    <button id="submit-lieu-form" type="submit">TEST</button>
+
+</form>
