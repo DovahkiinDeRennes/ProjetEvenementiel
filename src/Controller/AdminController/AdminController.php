@@ -254,14 +254,17 @@ class AdminController extends AbstractController
             $form = $this->createForm(ListOfUsersType::class);
             $form->handleRequest($request);
 
-            //récupération du champs File sous form de tableau (contenant un UploadedFile)
+            //récupération du champs Files sous form de tableau (contenant un UploadedFile)
             $csvFile = $request->files->get('list_of_users');
+
 
             if ($form->isSubmitted()) {
 
                 if ($csvFile['list_of_users'] instanceof UploadedFile) {
+                    $csvContent = $csvFile['list_of_users']->getContent();
+
                     //Decoder le CSV : transformer le csv en Array
-                    $users = $serializer->decode(file_get_contents($csvFile['list_of_users']->getPathname()), 'csv');
+                    $users = $serializer->decode($csvContent, 'csv');
 
                     foreach ($users as $newUser) {
 
