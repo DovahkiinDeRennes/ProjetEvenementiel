@@ -114,6 +114,8 @@
                            <a href="{{ url('sortie_cancel', {'id': sortie.id }) }}"><img src="{{ asset('images/5.png') }}" title="Annuler" class="image2"></a>
                         {% endif %}
                         {% endif %}
+
+
                         {#  Si d de la personne connectée != id sortie.organisateur #}
                         {# Si inscrit #}
 
@@ -128,10 +130,23 @@
             {% endfor %}
             </tbody>
         </table>
+
         <div>
             <button class="ajout"><a href="{{ url('sortie_create') }}">Créer une sortie</a> </button>
         </div>
     </div>
+        <div class="enBas">
+        {% set nbPages = (count2 / maxPerPage)|round(0,'ceil') %}
+        <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item {% if app.request.get('p') <= 1 %}disabled{% endif %}"><a class="page-link" href="{{ url('home_home', {'p': app.request.get('p') - 1}) }}">Previous</a></li>
+                {% for i in 1..nbPages %}
+                    <li class="page-item"><a class="page-link {% if (app.request.get('p') is empty and i == 1) or app.request.get('p') == i %}active{% endif %}" href="{{ url('home_home', {'p': i}) }}">{{ i }}</a></li>
+                {% endfor %}
+                <li class="page-item {% if app.request.get('p') == nbPages %}disabled{% endif %}"><a class="page-link" href="{{ url('home_home', {'p': app.request.get('p')|default(1) + 1}) }}">Next</a></li>
+            </ul>
+        </nav>
+        </div>
 {% endblock %}
 
 {% block js %}

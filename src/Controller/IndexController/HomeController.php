@@ -39,10 +39,27 @@ class HomeController extends  AbstractController
 
 
             if ($user && !$user->getActif()) {
+                $maxPerPage = 5;
+
+                if (($page = $request->query->get('p', 1)) < 1) {
+                    return $this->redirectToRoute('home_home');
+                }
+//                $count2 = $entityManager->getRepository(Wish::class)->count(['' => true]);
+                $count2 = $entityManager->getRepository(Sortie::class)->count([]);
+                $sorties = $sortieRepository->findAllEvents($maxPerPage,$page);
+
+                // Vérification de la page
+                if ($page !== 1 && empty($sorties)) {
+                    return $this->redirectToRoute('home_home');
+                }
                 // Récupération de toutes les sorties
-                $sorties = $sortieRepository->findAllEvents();
+                $sorties = $entityManager->getRepository(Sortie::class)->findAllEvents($page, $maxPerPage);
                 // Initialisation de la variable pour stocker les sorties à afficher
                 $sortiesToDisplay = [];
+
+
+
+
 
                 // Vérifier le rôle de l'utilisateur
                 $isAdmin = $security->isGranted('ROLE_ADMIN');
@@ -90,7 +107,9 @@ class HomeController extends  AbstractController
                     'isRegistered' => $isRegistered,
                     'inscrit' => $inscrit,
                     'searchForm' => $searchForm->createView(),
-                    'user' => $user
+                    'user' => $user,
+                    'maxPerPage' => $maxPerPage,
+                    'count2' => $count2,
                 ]);
             }
             else {
