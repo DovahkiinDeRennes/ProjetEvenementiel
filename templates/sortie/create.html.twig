@@ -25,7 +25,12 @@
             <a href="{{ url('home_home') }}">Annuler</a>
             {{ form_end(sortieForm) }}
 
+            <div id="afficheForm">qsdqssdssdsd
+                <div id="creation-lieu-form">
 
+                </div>
+
+            </div>
 
 
         </form>
@@ -59,6 +64,102 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
+
+
+        document.getElementById('afficheForm').addEventListener('click', function() {
+
+        });
+
+
+
+        {#  function loadCreatePlaceForm() {
+            fetch("{{ path('formLieu') }}", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.json()) // Vous récupérez le texte brut du formulaire
+                .then(data => {
+                    // Injecter le formulaire HTML dans votre page
+                    document.getElementById('creation-lieu-form').innerHTML = data;
+
+                    // Ajouter un gestionnaire d'événement pour soumettre le formulaire
+                    document.getElementById('create_place_ajouter').addEventListener('submit', function(event) {
+                        event.preventDefault(); // Empêcher le comportement par défaut du formulaire
+
+                        // Récupérer les données du formulaire
+                        let formData = new FormData(document.getElementById('creation-lieu-form'));
+
+                        // Envoyer les données au serveur
+                        fetch("{{ path('submitLieuForm') }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'text/html',
+                            },
+                            body: JSON.stringify(Object.fromEntries(formData.entries())) // Convertir FormData en objet JSON
+                        })
+                            .then(response => response.text())
+                            .then(data => {
+                                // Traiter la réponse du serveur si nécessaire
+                                console.log(data);
+                            })
+                            .catch(error => console.error('Error:', error));
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        loadCreatePlaceForm();  #}
+
+        function loadCreatePlaceForm() {
+            fetch("{{ path('form_Lieu') }}")
+                .then(response => response.json())
+                .then(data => {
+                    // Injecter le formulaire HTML dans votre page
+                    document.getElementById('creation-lieu-form').innerHTML = data;
+
+
+                    let formElement = document.getElementById('creation-lieu-form').querySelector('form');
+                        console.log()
+
+                    formElement.addEventListener('submit', function (event) {
+                        event.preventDefault();
+
+                        // Récupérer les données du formulaire
+
+                        let formData = new FormData(formElement);
+                        let formDataObject = {};
+                        formData.forEach((value, key) => {
+                            formDataObject[key] = value;
+                        });
+
+                        console.log(formDataObject);
+
+                        // Envoyer les données au serveur
+                        fetch("{{ path('submitLieuForm') }}", {
+                            method: 'POST', // Assurez-vous que la méthode est POST
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formDataObject) // Utilisez formDataObject ici
+
+                        })
+                            .then(response => response.text())
+
+                            .then(data => {
+                                // Traiter la réponse du serveur si nécessaire
+                            })
+                            .catch(error => console.error('Error:', error));
+                    });
+                }
+                )
+        }
+        loadCreatePlaceForm();
+
+
+
+
 
 
     </script>

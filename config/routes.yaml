@@ -3,3 +3,9 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+
+submit_lieu_form:
+    path: /lieu/submitLieuForm
+    controller: App\Controller\AjaxController::submitLieuForm
+    methods: [POST]

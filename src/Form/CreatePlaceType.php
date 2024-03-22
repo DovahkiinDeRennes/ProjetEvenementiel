@@ -15,15 +15,25 @@ class CreatePlaceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('rue')
-            ->add('latitude')
-            ->add('longitude')
+            ->add('nom', null, [
+                'data' => 'test',
+            ])
+            ->add('rue', null, [
+                'data' => 'test',
+            ])
+            ->add('latitude', null, [
+                'data' => '12',
+            ])
+            ->add('longitude', null, [
+                'data' => '12',
+            ])
             ->add('villeId', EntityType::class, [
                 'class' => Ville::class,
                 'choice_label' => 'nom',
+
             ])
-            ->add('ajouter', SubmitType::class)
+            ->add('Ajouter', SubmitType::class)
+
         ;
     }
 

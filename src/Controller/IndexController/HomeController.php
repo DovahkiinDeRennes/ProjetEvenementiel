@@ -31,13 +31,13 @@ class HomeController extends  AbstractController
     public function home(Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, Security $security, MiseAjourSortie $MiseAjourSortie): Response
     {
         $this->MiseAjourSortie->updateSortieState();
-
+        // La page s'affiche si on est un utilisateur connecté
         if ($security->isGranted('IS_AUTHENTICATED')) {
             $userId = $this->getUser()->getId();
             $user = $entityManager->getRepository(User::class)->find($userId);
 
 
-            // La page s'affiche si on est un utilisateur connecté
+
             if ($user && !$user->getActif()) {
                 // Récupération de toutes les sorties
                 $sorties = $sortieRepository->findAllEvents();
