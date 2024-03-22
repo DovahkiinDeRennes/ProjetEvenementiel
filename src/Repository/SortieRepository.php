@@ -23,7 +23,7 @@ class SortieRepository extends ServiceEntityRepository
 
     }
 
-        public function findAllEvents(): array
+        public function findAllEvents(int $page, int$maxPerPage): array
         {
             $queryBuilder = $this->createQueryBuilder('event');
 
@@ -38,6 +38,9 @@ class SortieRepository extends ServiceEntityRepository
 
 
             $query = $queryBuilder->getQuery();
+
+            $query->setMaxResults($maxPerPage);
+            $query->setFirstResult($maxPerPage * ($page - 1));
 
             return  $query->getResult();
 

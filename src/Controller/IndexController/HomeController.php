@@ -31,17 +31,29 @@ class HomeController extends  AbstractController
     public function home(Request $request, EntityManagerInterface $entityManager, SortieRepository $sortieRepository, Security $security, MiseAjourSortie $MiseAjourSortie): Response
     {
         $this->MiseAjourSortie->updateSortieState();
-
         // La page s'affiche si on est un utilisateur connecté
         if ($security->isGranted('IS_AUTHENTICATED')) {
             $userId = $this->getUser()->getId();
             $user = $entityManager->getRepository(User::class)->find($userId);
 
 
-           // La page s'affiche si on est pas ban
+
             if (!$security->isGranted('ROLE_BANNED')) {
+                $maxPerPage = 5;
+
+                if (($page = $request->query->get('p', 1)) < 1) {
+                    return $this->redirectToRoute('home_home');
+                }
+//                $count2 = $entityManager->getRepository(Wish::class)->count(['' => true]);
+                $count2 = $entityManager->getRepository(Sortie::class)->count([]);
+                $sorties = $sortieRepository->findAllEvents($maxPerPage,$page);
+
+                // Vérification de la page
+                if ($page !== 1 && empty($sorties)) {
+                    return $this->redirectToRoute('home_home');
+                }
                 // Récupération de toutes les sorties
-                $sorties = $sortieRepository->findAllEvents();
+                $sorties = $entityManager->getRepository(Sortie::class)->findAllEvents($page, $maxPerPage);
                 // Initialisation de la variable pour stocker les sorties à afficher
                 $sortiesToDisplay = [];
 
@@ -91,7 +103,9 @@ class HomeController extends  AbstractController
                     'isRegistered' => $isRegistered,
                     'inscrit' => $inscrit,
                     'searchForm' => $searchForm->createView(),
-                    'user' => $user
+                    'user' => $user,
+                    'maxPerPage' => $maxPerPage,
+                    'count2' => $count2,
                 ]);
             }
             else {
