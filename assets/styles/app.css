@@ -3,7 +3,7 @@
 /*-----------------------------Header------------------------------*/
 header {
     background-color: #eee9e5;
-    width: auto;
+    /*width: auto;*/
     height: 150px;
     display: flex;
     align-items: center;
@@ -15,24 +15,24 @@ header {
     background-size: cover;*/
     box-shadow : 0 0 20px rgba(0, 0, 0, 0.79);
     padding: 20px;
-
 }
 .header-content {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px; /* Ajout de padding pour l'espacement */
-    width: 100%; /* Ajustement de la largeur */
+    flex-direction: row;
+    /*width: 100%; !* Ajustement de la largeur *!*/
 }
 .left-content {
     display: flex;
     align-items: center;
 }
-.header-content {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-}
+/*.header-content {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    flex-direction: row;*/
+/*}*/
 header nav ul {
     list-style-type: none;
     margin: 0;
@@ -57,7 +57,7 @@ header nav li a{
     justify-content: space-between;
 }
 .pad{
-    margin-left: 200px;
+    margin-left: 80px;
 }
 
 .pad2{
@@ -113,6 +113,13 @@ footer {
 
 
 /*-----------------------------Body------------------------------*/
+h1 {
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-size: 30px;
+}
+
 .toto{
     min-height: 76vh;
     flex-grow: 1;
@@ -166,10 +173,16 @@ table {
     margin-bottom: 15px;
 }
 
+th {
+    font-size: 20px;
+}
+
 th, td {
 
     padding: 10px;
-    text-align: left;
+    /*text-align: left;*/
+    text-align: center;
+    /*font-size: 20px;*/
 }
 
 
@@ -417,6 +430,16 @@ h2 {
     height: 400px;
 }
 
+
+.alert-warning{
+    background-color: #6b4bad;
+    color: white;
+}
+
+.alert-error{
+    background-color: red;
+    color: white;
+}
 
 .alert{
     text-align: center;

@@ -42,7 +42,20 @@ class HomeController extends  AbstractController
                 // Récupération de toutes les sorties
                 $sorties = $sortieRepository->findAllEvents();
                 // Initialisation de la variable pour stocker les sorties à afficher
-                $sortiesToDisplay = $sorties;
+                $sortiesToDisplay = [];
+
+                // Vérifier le rôle de l'utilisateur
+                $isAdmin = $security->isGranted('ROLE_ADMIN');
+
+                foreach ($sorties as $sortie) {
+                    // Vérifier si l'utilisateur est l'organisateur de la sortie ou s'il est administrateur
+                    if ($sortie->getOrganisateur() === $user || $isAdmin) {
+                        // Ajouter la sortie à afficher
+                        $sortiesToDisplay[] = $sortie;
+                    } elseif ($sortie->getEtatId()->getId() != 3) {
+                        $sortiesToDisplay[] = $sortie;
+                    }
+                }
 
                 // Création du formulaire de recherche
                 $searchForm = $this->createForm(SearchSortieType::class);
