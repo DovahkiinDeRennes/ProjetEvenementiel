@@ -25,168 +25,187 @@ class SortieController extends AbstractController
     #[Route('create', name: 'create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $em, Security $security): Response
     {
-        // Je récup l'utilisateur connecté AVEC LA CLASSE SECURITY!!!!!!
-        $user = $security->getUser();
-        // Creer une nouvelle sortie
-        $sortie = new Sortie();
-        // Creer le formulaire
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
-        // hydrater le formulaire
-        $sortieForm->handleRequest($request);
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // Je récup l'utilisateur connecté AVEC LA CLASSE SECURITY!!!!!!
+            $user = $security->getUser();
+            // Creer une nouvelle sortie
+            $sortie = new Sortie();
+            // Creer le formulaire
+            $sortieForm = $this->createForm(SortieType::class, $sortie);
+            // hydrater le formulaire
+            $sortieForm->handleRequest($request);
 
-        // si le formulaire est envoyé
-        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-            if ($request->request->has('draft')) {
-                $etatId = $em->getRepository(Etat::class)->find(3); // ID de l'état "Brouillon"
-            } elseif ($request->request->has('publish')) {
-                $etatId = $em->getRepository(Etat::class)->find(4); // ID de l'état "Publié"
-            }
-            //Définir l'utilisateur organisateur AVEC LA CLASSE SECURITY UP UP UP UP UP (retrouve le $user pour comprendre, ligne 27)
-            $sortie->setOrganisateur($user);
-            $site = $em->getRepository(Site::class)->find($user);
-            $sortie->setSite($site);
-
-
-
-               // Je prend le 1er etat de sortie (dans la base de donnée)
-
-               // Je set l'etat avec la fonction setEtatId
-               $sortie->setEtatId($etatId);
+            // si le formulaire est envoyé
+            if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+                if ($request->request->has('draft')) {
+                    $etatId = $em->getRepository(Etat::class)->find(3); // ID de l'état "Brouillon"
+                } elseif ($request->request->has('publish')) {
+                    $etatId = $em->getRepository(Etat::class)->find(4); // ID de l'état "Publié"
+                }
+                //Définir l'utilisateur organisateur AVEC LA CLASSE SECURITY UP UP UP UP UP (retrouve le $user pour comprendre, ligne 27)
+                $sortie->setOrganisateur($user);
+                $site = $em->getRepository(Site::class)->find($user);
+                $sortie->setSite($site);
 
 
-               $em->persist($sortie);
+                // Je prend le 1er etat de sortie (dans la base de donnée)
 
-               $em->flush();
-
-               // message d'alerte
-               $this->addFlash('success', 'La sortie a bien été enregistrée.');
-               return $this->redirectToRoute('home_home');
-
-        }
-
-
-
-        // Pour acceder à la page
-        return $this->render('sortie/create.html.twig', [
-            'sortieForm' => $sortieForm
-        ]);
-    }
-
-    #[Route('newEtat/{id}', name: 'newEtat', methods: ['GET', 'POST'])]
-    public function newEtat(Request $request, EntityManagerInterface $em,int $id): Response
-    {
-        $sortie = $em->getRepository(Sortie::class)->find($id);
-
-        $userId = $this->getUser()->getId();
-
-        $organisateur = $sortie->getOrganisateur();
-
-        if($organisateur->getId() == $userId){
-            if( $sortie->getEtatId()->getId() == 3){
-                $etatId = $em->getRepository(Etat::class)->find(4); // ID de l'état "Publié"
-
+                // Je set l'etat avec la fonction setEtatId
                 $sortie->setEtatId($etatId);
+
+
                 $em->persist($sortie);
 
                 $em->flush();
-                $this->addFlash('success', 'La sortie a bien été publie.');
-            }
-        }
-        else {
-            $this->addFlash('error', 'Vous ne pouvez pas publier une sortie dont vous n\'estiez pas l\'organisateur.');
-        }
 
-        // Récupérer la sortie avec son id
-        return $this->redirectToRoute('home_home');
+                // message d'alerte
+                $this->addFlash('success', 'La sortie a bien été enregistrée.');
+                return $this->redirectToRoute('home_home');
+
+            }
+
+
+            // Pour acceder à la page
+            return $this->render('sortie/create.html.twig', [
+                'sortieForm' => $sortieForm
+            ]);
+
+        }else
+        {
+            // Redirection vers la page de connexion si l'utilisateur est banni
+            return $this->render('/User/actif.html.twig');
+        }
+    }
+
+    #[Route('newEtat/{id}', name: 'newEtat', methods: ['GET', 'POST'])]
+    public function newEtat(EntityManagerInterface $em,int $id, Security $security): Response
+    {
+        if (!$security->isGranted('ROLE_BANNED')) {
+            $sortie = $em->getRepository(Sortie::class)->find($id);
+
+            $userId = $this->getUser()->getId();
+
+            $organisateur = $sortie->getOrganisateur();
+
+            if($organisateur->getId() == $userId){
+                if( $sortie->getEtatId()->getId() == 3){
+                    $etatId = $em->getRepository(Etat::class)->find(4); // ID de l'état "Publié"
+
+                    $sortie->setEtatId($etatId);
+                    $em->persist($sortie);
+
+                    $em->flush();
+                    $this->addFlash('success', 'La sortie a bien été publie.');
+                }
+            }
+            else {
+                $this->addFlash('error', 'Vous ne pouvez pas publier une sortie dont vous n\'estiez pas l\'organisateur.');
+            }
+            // Récupérer la sortie avec son id
+            return $this->redirectToRoute('home_home');
+        }else
+        {
+            // Redirection vers la page de connexion si l'utilisateur est banni
+            return $this->render('/User/actif.html.twig');
+        }
     }
 
 
 
 
     #[Route('suscribe/{id}', name: 'suscribe', methods: ['GET', 'POST'])]
-    public function suscribe( EntityManagerInterface $em,int $id): Response
+    public function suscribe( EntityManagerInterface $em,int $id, Security $security): Response
     {
-        // Récupérer l'utilisateur connecte (oui, c'est une nouvelle façon de faire  tu va faire quoi?)
-        $userId = $this->getUser()->getId();
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // Récupérer l'utilisateur connecte (oui, c'est une nouvelle façon de faire  tu va faire quoi?)
+            $userId = $this->getUser()->getId();
 
 
-        // Récupérer la sortie avec son id
-        $sortie = $em->getRepository(Sortie::class)->find($id);
-        // Récupère l'utilisateur connecte avec son id
-        $user = $em->getRepository(User::class)->find($userId);
+            // Récupérer la sortie avec son id
+            $sortie = $em->getRepository(Sortie::class)->find($id);
+            // Récupère l'utilisateur connecte avec son id
+            $user = $em->getRepository(User::class)->find($userId);
 
-        // Ajouter la sortie a l'utilisateur (c'est une méthode de quoicoubeh? nan je rigole de l' Entity User)
-        // On verifie l'etat + la date de cloture
-
-        //  $prout = new \DateTimeImmutable('now' , new \DateTimeZone('Europe/Paris')) = null, calendar = "gregorian", locale = null);
+            // Ajouter la sortie a l'utilisateur (c'est une méthode de quoicoubeh? nan je rigole de l' Entity User)
+            // On verifie l'etat + la date de cloture
 
 
-        if ($user->getId() == $sortie->getOrganisateur()->getId()) {
-            $this->addFlash('error', 'Vous ne pouvez pas vous inscrire à votre propre sortie.');
-        } else {
-            $dateActuelle = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
-            $dateDebut = $sortie->getDateHeureDebut();
-            $utilisateursInscrits = $sortie->getUsers();
-
-            $nombreInscriptions = count($utilisateursInscrits);
-
-            $utilisateursInscrits = $sortie->getUsers();
-            $utilisateursInscrits->initialize(); // Initialisation de la collection
-
-
-            if ($nombreInscriptions >= $sortie->getNbInscriptionMax()) {
-                $this->addFlash('error', 'Les inscriptions sont aux maximum de leurs capacités.');
-            } elseif ($dateActuelle >= $dateDebut && $sortie->getEtatId()->getId() != 4) {
-                $this->addFlash('error', 'Les inscriptions sont terminées pour cette sortie.');
-            } elseif ($utilisateursInscrits->contains($user)) {
-                $this->addFlash('error', 'Vous êtes déjà inscrit à cette sortie.');
+            if ($user->getId() == $sortie->getOrganisateur()->getId()) {
+                $this->addFlash('error', 'Vous ne pouvez pas vous inscrire à votre propre sortie.');
             } else {
-                $user->addSorty($sortie);
-                $em->flush();
-                $this->addFlash('success', 'Vous êtes inscrit à cette sortie.');
-            }
+                $dateActuelle = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+                $dateDebut = $sortie->getDateHeureDebut();
+                $utilisateursInscrits = $sortie->getUsers();
 
+                $nombreInscriptions = count($utilisateursInscrits);
+
+                $utilisateursInscrits = $sortie->getUsers();
+                $utilisateursInscrits->initialize(); // Initialisation de la collection
+
+
+                if ($nombreInscriptions >= $sortie->getNbInscriptionMax()) {
+                    $this->addFlash('error', 'Les inscriptions sont aux maximum de leurs capacités.');
+                } elseif ($dateActuelle >= $dateDebut && $sortie->getEtatId()->getId() != 4) {
+                    $this->addFlash('error', 'Les inscriptions sont terminées pour cette sortie.');
+                } elseif ($utilisateursInscrits->contains($user)) {
+                    $this->addFlash('error', 'Vous êtes déjà inscrit à cette sortie.');
+                } else {
+                    $user->addSorty($sortie);
+                    $em->flush();
+                    $this->addFlash('success', 'Vous êtes inscrit à cette sortie.');
+                }
+
+            }
+            return $this->redirectToRoute('home_home');
+        }else
+        {
+            // Redirection vers la page de connexion si l'utilisateur est banni
+            return $this->render('/User/actif.html.twig');
         }
-        return $this->redirectToRoute('home_home');
     }
 
     #[Route('unsuscribe/{id}', name: 'unsuscribe', methods: ['GET', 'POST'])]
-    public function unsuscribe(Request $request, EntityManagerInterface $em,int $id): Response
+    public function unsuscribe(EntityManagerInterface $em,int $id, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // Récupérer l'utilisateur connecte, oui c'est exactement la mème chose qu'avant
+            $userId = $this->getUser()->getId();
+            // Récupérer la sortie avec son id
+            $sortie = $em->getRepository(Sortie::class)->find($id);
+            // Récupère l'utilisateur connecte avec son id
+            $user = $em->getRepository(User::class)->find($userId);
 
-        // Récupérer l'utilisateur connecte, oui c'est exactement la mème chose qu'avant
-        $userId = $this->getUser()->getId();
-        // Récupérer la sortie avec son id
-        $sortie = $em->getRepository(Sortie::class)->find($id);
-        // Récupère l'utilisateur connecte avec son id
-        $user = $em->getRepository(User::class)->find($userId);
+            // devine ça fait quoi ça???? allez 1, 2, 3, flop.... la fonction removeSorty dans ENTITY User (le contraire de addSorty)
+            // On verifie l'etat + la date de cloture
 
-        // devine ça fait quoi ça???? allez 1, 2, 3, flop.... la fonction removeSorty dans ENTITY User (le contraire de addSorty)
-        // On verifie l'etat + la date de cloture
-
-        if ($user->getSorties()) {
-            $user->removeSorty($sortie);
-            $em->flush();
-            $this->addFlash('warning', 'Vous vous êtes désinscrit de la sortie avec succès.');
+                    if ($user->getSorties()) {
+                        $user->removeSorty($sortie);
+                        $em->flush();
+                        $this->addFlash('warning', 'Vous vous êtes désinscrit de la sortie avec succès.');
+            }
+            return $this->redirectToRoute('home_home');
+        }else
+        {
+            // Redirection vers la page de connexion si l'utilisateur est banni
+            return $this->render('/User/actif.html.twig');
         }
-        return $this->redirectToRoute('home_home');
     }
 
     #[Route('update/{id}', name: 'update', methods: ['GET', 'POST'])]
-    public function update(Request $request, EntityManagerInterface $em,int $id): Response
+    public function update(Request $request, EntityManagerInterface $em,int $id, Security $security): Response
     {
-
-        $userId = $this->getUser()->getId();
-        // Récupérer la sortie avec son id
-        $sortie = $em->getRepository(Sortie::class)->find($id);
-        // Création du formulaire avec la sortie recupérée
-        $form = $this->createForm(SortieType::class, $sortie);
-        $user = $em->getRepository(User::class)->find($userId);
-        // hydrater le formulaire
-        $form->handleRequest($request);
-        // si le formulaire est envoyé et valide
-        if ($user->getId() == $sortie->getOrganisateur()->getId()) {
-            if ($form->isSubmitted() && $form->isValid()) {
+        if (!$security->isGranted('ROLE_BANNED')) {
+            $userId = $this->getUser()->getId();
+            // Récupérer la sortie avec son id
+            $sortie = $em->getRepository(Sortie::class)->find($id);
+            // Création du formulaire avec la sortie recupérée
+            $form = $this->createForm(SortieType::class, $sortie);
+            $user = $em->getRepository(User::class)->find($userId);
+            // hydrater le formulaire
+            $form->handleRequest($request);
+            // si le formulaire est envoyé et valide
+            if ($user->getId() == $sortie->getOrganisateur()->getId()) {
+                if ($form->isSubmitted() && $form->isValid()) {
 
                 if ($request->request->has('draft')) {
                     $etatId = 3; // ID de l'état "Brouillon"
@@ -198,75 +217,86 @@ class SortieController extends AbstractController
                 $etat = $em->getRepository(Etat::class)->find($etatId);
                 $sortie->setEtatId($etat);
 
-                $em->persist($sortie);
+                    $em->persist($sortie);
 
-                $em->flush();
+                    $em->flush();
+                    return $this->redirectToRoute('home_home');
+                }
+
+            }else{
+                $this->addFlash('error', 'Vous ne pouvez pas modifier une sortie dont vous n\'estiez pas l\'organisateur.');
                 return $this->redirectToRoute('home_home');
             }
+            return $this->render('sortie/update.html.twig', ['form' => $form->createView(), 'id' => $id ]);
 
-        }else{
-            $this->addFlash('error', 'Vous ne pouvez pas modifier une sortie dont vous n\'estiez pas l\'organisateur.');
-            return $this->redirectToRoute('home_home');
+        }else
+        {
+            // Redirection vers la page de connexion si l'utilisateur est banni
+            return $this->render('/User/actif.html.twig');
         }
-        return $this->render('sortie/update.html.twig', ['form' => $form->createView(), 'id' => $id ]);
 
     }
 
     #[Route('detail/{id}', name: 'detail', methods: ['GET', 'POST'])]
-    public function detail(int $id, EntityManagerInterface $em): Response
+    public function detail(int $id, EntityManagerInterface $em, Security $security): Response
     {
-        // Récupère la sortie avec son id sans le formulaire vue qu'on veut simplement le détail aucune modification prévu
-        $sortie = $em->getRepository(Sortie::class)->find($id);
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // Récupère la sortie avec son id sans le formulaire vue qu'on veut simplement le détail aucune modification prévu
+            $sortie = $em->getRepository(Sortie::class)->find($id);
 
-        return $this->render('/sortie/detail.html.twig', [
-            'sortie'=>$sortie,
-        ]);
+            return $this->render('/sortie/detail.html.twig', [
+                'sortie'=>$sortie,
+            ]);
+        }else
+        {
+            // Redirection vers la page de connexion si l'utilisateur est banni
+            return $this->render('/User/actif.html.twig');
+        }
     }
 
     #[Route('cancel/{id}', name: 'cancel', methods: ['GET', 'POST'])]
-    public function cancel(Request $request, EntityManagerInterface $em, int $id): Response
+    public function cancel(Request $request, EntityManagerInterface $em, int $id, Security $security): Response
     {
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // Récupérer la sortie avec son id
+            $sorties = $em->getRepository(Sortie::class)->find($id);
+            // Création du formulaire avec la sortie recupérée
+            $form = $this->createForm(CancelSortieType::class, $sorties);
 
 
-        // Récupérer la sortie avec son id
-        $sorties = $em->getRepository(Sortie::class)->find($id);
-        // Création du formulaire avec la sortie recupérée
-        $form = $this->createForm(CancelSortieType::class, $sorties);
+            $form->handleRequest($request);
 
 
-        $form->handleRequest($request);
-
-
-        $dateActuelle = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
-        $dateDebut = $sorties->getDateHeureDebut();
+            $dateActuelle = new \DateTime('now', new \DateTimeZone('Europe/Paris'));
+            $dateDebut = $sorties->getDateHeureDebut();
 
 
 
-        if ($dateActuelle >= $dateDebut) {
-            $this->addFlash('danger', 'Vous ne pouvez pas annuler une sortie déjà "En cours".');
-            return  $this->redirectToRoute('home_home');
-        } else {
-            if ($form->isSubmitted()) {
-                // si submit alors on set un état qu'on récupère avec l'id
-                $etatId = $em->getRepository(Etat::class)->find(2);
-                $sorties->setEtatId($etatId);
-                $em->persist($sorties);
-                $em->flush();
+            if ($dateActuelle >= $dateDebut) {
+                $this->addFlash('danger', 'Vous ne pouvez pas annuler une sortie déjà "En cours".');
+                return  $this->redirectToRoute('home_home');
+            } else {
+                if ($form->isSubmitted()) {
+                    // si submit alors on set un état qu'on récupère avec l'id
+                    $etatId = $em->getRepository(Etat::class)->find(2);
+                    $sorties->setEtatId($etatId);
+                    $em->persist($sorties);
+                    $em->flush();
 
-                return $this->redirectToRoute('home_home');
+                    return $this->redirectToRoute('home_home');
+                }
+
             }
+            return $this->render('sortie/cancel.html.twig', [
+                'form' => $form ->createView(),
+                'sorties' => $sorties
+            ]);
 
+        }else
+        {
+            // Redirection vers la page de connexion si l'utilisateur est banni
+            return $this->render('/User/actif.html.twig');
         }
-        return $this->render('sortie/cancel.html.twig', [
-            'form' => $form ->createView(),
-            'sorties' => $sorties
-        ]);
     }
-
-
-
-
-
-
 
 }

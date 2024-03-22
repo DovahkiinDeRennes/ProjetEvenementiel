@@ -38,7 +38,7 @@ class HomeController extends  AbstractController
 
 
 
-            if ($user && !$user->getActif()) {
+            if (!$security->isGranted('ROLE_BANNED')) {
                 $maxPerPage = 5;
 
                 if (($page = $request->query->get('p', 1)) < 1) {
@@ -56,10 +56,6 @@ class HomeController extends  AbstractController
                 $sorties = $entityManager->getRepository(Sortie::class)->findAllEvents($page, $maxPerPage);
                 // Initialisation de la variable pour stocker les sorties à afficher
                 $sortiesToDisplay = [];
-
-
-
-
 
                 // Vérifier le rôle de l'utilisateur
                 $isAdmin = $security->isGranted('ROLE_ADMIN');
