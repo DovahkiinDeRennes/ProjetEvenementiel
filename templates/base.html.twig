@@ -25,30 +25,33 @@
             <div class="f">
                 <div class="flex">
 
-                    <h2 class="size">Les Assassymfonystes </h2>
+                    <h2 class="size">Sortir.com </h2>
+
                 </div>
                 <div class="row">
                     <div class="flex">
                         <nav>
                             <ul>
+                                {% if is_granted('IS_AUTHENTICATED') %}
                                     <li>
-                                        <a href="{{ url('home_home') }}">Accueil</a>
+                                        <a href="{{ url('home_home') }}" class="bouton">Accueil</a>
                                     </li>
+                                {% endif %}
                                 {% if is_granted('ROLE_ADMIN') %}
                                     <li>
-                                        <a href="{{ url('admin_place') }}">Gérer les lieux</a>
+                                        <a href="{{ url('admin_place') }}" class="bouton">Gérer les lieux</a>
                                     </li>
                                     <li>
-                                        <a href="{{ url('admin_site') }}">Gérer les sites</a>
+                                        <a href="{{ url('admin_site') }}" class="bouton">Gérer les sites</a>
                                     </li>
                                     <li>
-                                        <a href="{{ url('admin_registerUser') }}">Créer un membre</a>
+                                        <a href="{{ url('admin_registerUser') }}" class="bouton">Créer un membre</a>
                                     </li>
                                     <li>
-                                        <a href="{{ url('admin_registerUsers') }}">Créer des membres</a>
+                                        <a href="{{ url('admin_registerUsers') }}" class="bouton">Créer des membres</a>
                                     </li>
                                     <li>
-                                        <a href="{{ url('user_list') }}">Listes des membres</a>
+                                        <a href="{{ url('user_list') }}" class="bouton">Listes des membres</a>
                                     </li>
                                 {% endif %}
                             </ul>
@@ -64,7 +67,7 @@
         <nav>
             <ul>
                 {% if is_granted('IS_AUTHENTICATED') %}
-                    <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                    <li><a href="{{ path('app_logout') }}" class="bouton">Se déconnecter</a></li>
                     <li>
                         {% if app.user.picture %}
                             <a href="{{ url('user_updateUser', {'id': app.user.id }) }}"><img src="{{ asset('uploads/' ~ app.user.picture) }}" alt="Photo de profil" class="image"></a>
@@ -73,8 +76,8 @@
                         {% endif %}
                     </li>
                 {% else %}
-                    <li><a href="{{ path('app_login') }}">Se connecter</a></li>
-                    <li><a href="{{ path('app_register') }}">S'inscrire</a></li>
+                    <li><a href="{{ path('app_login') }}" class="bouton">Se connecter</a></li>
+                    <li><a href="{{ path('app_register') }}" class="bouton">S'inscrire</a></li>
                 {% endif %}
             </ul>
         </nav>
