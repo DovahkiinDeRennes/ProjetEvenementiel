@@ -32,13 +32,14 @@ class HomeController extends  AbstractController
     {
         $this->MiseAjourSortie->updateSortieState();
 
-        if ($security->isGranted('IS_AUTHENTICATED')) {
+        // La page s'affiche si on est un utilisateur connecté
+      if ($security->isGranted('IS_AUTHENTICATED')) {
             $userId = $this->getUser()->getId();
-            $user = $entityManager->getRepository(User::class)->find($userId);
+              $user = $entityManager->getRepository(User::class)->find($userId);
 
 
-            // La page s'affiche si on est un utilisateur connecté
-            if ($user && !$user->getActif()) {
+           // La page s'affiche si on est pas ban
+            if (!$security->isGranted('ROLE_BANNED')) {
                 // Récupération de toutes les sorties
                 $sorties = $sortieRepository->findAllEvents();
                 // Initialisation de la variable pour stocker les sorties à afficher

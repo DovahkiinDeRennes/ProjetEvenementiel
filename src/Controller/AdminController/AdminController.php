@@ -30,120 +30,173 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AdminController extends AbstractController
 {
     #[Route(path: 'place', name: 'place')]
-    public function getPlaces(LieuRepository $lieuRepository){
-        // fonction créer dans le lieuRepository pour récuprer tous lieux
-        $places = $lieuRepository->findAllLieuVille();
-        return $this->render('Admin/places.html.twig',compact('places'));
+    public function getPlaces(LieuRepository $lieuRepository, Security $security){
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // fonction créer dans le lieuRepository pour récuprer tous lieux
+            $places = $lieuRepository->findAllLieuVille();
+            return $this->render('Admin/places.html.twig',compact('places'));
+        }else {
+            // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
+            return $this->render('/User/actif.html.twig');
+        }
     }
 
     #[Route(path: 'createPlace', name: 'createPlace')]
     public function createPlaces(EntityManagerInterface $entityManager, Request $request, Security $security){
 
-        // on crée un nouveau lieu
-        $places = new Lieu();
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // on crée un nouveau lieu
+            $places = new Lieu();
 
-        // on crée le formulaire pour ce lieu
-        $form = $this->createForm(CreatePlaceType::class, $places);
-        $form->handleRequest($request);
-        // ta capté je pense ?? si tu submits et que le formulaire est valide alors t'envoie dans la base de données
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($places);
-            $entityManager->flush();
-            if($security->getUser()->getRoles()[0] === 'ROLE_ADMIN')
-            {
-                return $this->redirectToRoute('admin_place');
+            // on crée le formulaire pour ce lieu
+            $form = $this->createForm(CreatePlaceType::class, $places);
+            $form->handleRequest($request);
+            // ta capté je pense ?? si tu submits et que le formulaire est valide alors t'envoie dans la base de données
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->persist($places);
+                $entityManager->flush();
+                if($security->getUser()->getRoles()[0] === 'ROLE_ADMIN')
+                {
+                    return $this->redirectToRoute('admin_place');
+                }
+                else {
+                    return $this->redirectToRoute('sortie_create');
+                }
             }
-            else {
-                return $this->redirectToRoute('sortie_create');
-            }
+            return $this->render('Admin/createPlace.html.twig',['form' => $form->createView()]);
+
+        }else {
+            // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
+            return $this->render('/User/actif.html.twig');
         }
-        return $this->render('Admin/createPlace.html.twig',['form' => $form->createView()]);
     }
 
     #[Route(path: 'updatePlace/{id}', name: 'updatePlace')]
-    public function updatePlace(EntityManagerInterface $entityManager, Request $request, int $id){
+    public function updatePlace(EntityManagerInterface $entityManager, Request $request, int $id, Security $security){
 
-        // on récupere le lieu avec l'id
-        $place = $entityManager->getRepository(Lieu::class)->find($id);
-        // on crée le formulaire pour ce lieu
-        $form = $this->createForm(CreatePlaceType::class, $place);
-        $form->handleRequest($request);
-        // si tu submits et que le formulaire est valide alors t'envoie dans la base de données
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($place);
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // on récupere le lieu avec l'id
+            $place = $entityManager->getRepository(Lieu::class)->find($id);
+            // on crée le formulaire pour ce lieu
+            $form = $this->createForm(CreatePlaceType::class, $place);
+            $form->handleRequest($request);
+            // si tu submits et que le formulaire est valide alors t'envoie dans la base de données
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->persist($place);
+                $entityManager->flush();
+                return $this->redirectToRoute('admin_place');
+            }
+            return $this->render('Admin/createPlace.html.twig',['form' => $form->createView()]);
+
+        }else {
+            // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
+            return $this->render('/User/actif.html.twig');
+        }
+    }
+
+    #[Route(path: 'deletePlace/{id}', name: 'deletePlace')]
+    public function deletePlace(EntityManagerInterface $entityManager,  int $id, Security $security)
+    {
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // on récupere le lieu avec l'id
+            $place = $entityManager->getRepository(Lieu::class)->find($id);
+            // et on le delete avec remove()
+            $entityManager->remove($place);
             $entityManager->flush();
             return $this->redirectToRoute('admin_place');
+        }else {
+            // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
+            return $this->render('/User/actif.html.twig');
         }
-        return $this->render('Admin/createPlace.html.twig',['form' => $form->createView()]);
-    }
-    #[Route(path: 'deletePlace/{id}', name: 'deletePlace')]
-    public function deletePlace(EntityManagerInterface $entityManager,  int $id)
-    {
-        // on récupere le lieu avec l'id
-        $place = $entityManager->getRepository(Lieu::class)->find($id);
-        // et on le delete avec remove()
-        $entityManager->remove($place);
-        $entityManager->flush();
-        return $this->redirectToRoute('admin_place');
 
     }
 
     #[Route(path : 'site', name:'site')]
-    public function getSites(EntityManagerInterface $entityManager,SiteRepository $siteRepository){
-// fonction créer dans le SiteRepository pour récuprer tous les sites
+    public function getSites(EntityManagerInterface $entityManager,SiteRepository $siteRepository, Security $security){
+        if (!$security->isGranted('ROLE_BANNED')) {
+        // fonction créer dans le SiteRepository pour récuprer tous les sites
         $sites = $siteRepository->findAllSiteUser();
 
         return $this->render('Admin/sites.html.twig',compact('sites'));
+        }else {
+            // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
+            return $this->render('/User/actif.html.twig');
+        }
 
     }
 
     #[Route(path: 'createSite', name: 'createSite')]
-    public function createSites(EntityManagerInterface $entityManager, Request $request){
-        // on crée un nouveau site
-        $sites = new Site();
-        // on crée le formulaire pour ce site
-        $form = $this->createForm(CreateSiteType::class, $sites);
-        $form->handleRequest($request);
-        // si tu submits et que le formulaire est valide alors t'envoie dans la base de données
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($sites);
-            $entityManager->flush();
-            return $this->redirectToRoute('admin_site');
+    public function createSites(EntityManagerInterface $entityManager, Request $request, Security $security){
+
+        if (!$security->isGranted('ROLE_BANNED')) {
+            // on crée un nouveau site
+            $sites = new Site();
+            // on crée le formulaire pour ce site
+            $form = $this->createForm(CreateSiteType::class, $sites);
+            $form->handleRequest($request);
+            // si tu submits et que le formulaire est valide alors t'envoie dans la base de données
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->persist($sites);
+                $entityManager->flush();
+                return $this->redirectToRoute('admin_site');
+            }
+            return $this->render('Admin/createSite.html.twig',['form' => $form->createView()]);
+
+        }else {
+            // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
+            return $this->render('/User/actif.html.twig');
         }
-        return $this->render('Admin/createSite.html.twig',['form' => $form->createView()]);
     }
 
     #[Route(path: 'updateSite/{id}', name: 'updateSite')]
-    public function updateSite(EntityManagerInterface $entityManager, Request $request, int $id){
-        //on recupere le site avec l'id
-        $site = $entityManager->getRepository(Site::class)->find($id);
-// on crée le formulaire pour ce site et on l'hydrate avec $site
-        $form = $this->createForm(CreateSiteType::class, $site);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($site);
-            $entityManager->flush();
-            return $this->redirectToRoute('admin_site');
+    public function updateSite(EntityManagerInterface $entityManager, Request $request, int $id, Security $security){
+
+        if (!$security->isGranted('ROLE_BANNED')) {
+            //on recupere le site avec l'id
+            $site = $entityManager->getRepository(Site::class)->find($id);
+            // on crée le formulaire pour ce site et on l'hydrate avec $site
+            $form = $this->createForm(CreateSiteType::class, $site);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager->persist($site);
+                $entityManager->flush();
+                return $this->redirectToRoute('admin_site');
+            }
+            return $this->render('Admin/createSite.html.twig', ['form' => $form->createView()]);
+
+        }else {
+            // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
+            return $this->render('/User/actif.html.twig');
         }
-        return $this->render('Admin/createSite.html.twig',['form' => $form->createView()]);
+
     }
 
     #[Route(path: 'deleteSite/{id}', name: 'deleteSite')]
-    public function deleteSite(EntityManagerInterface $entityManager,  int $id)
+    public function deleteSite(EntityManagerInterface $entityManager,  int $id, Security $security)
     {
-        //on recupere le site avec l'id
-        $site = $entityManager->getRepository(Site::class)->find($id);
-        //et on le delete avec remove()
-        $entityManager->remove($site);
-        $entityManager->flush();
-        return $this->redirectToRoute('admin_site');
+
+        if (!$security->isGranted('ROLE_BANNED')) {
+            //on recupere le site avec l'id
+            $site = $entityManager->getRepository(Site::class)->find($id);
+            //et on le delete avec remove()
+            $entityManager->remove($site);
+            $entityManager->flush();
+            return $this->redirectToRoute('admin_site');
+
+        }
+        else
+        {
+            // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
+            return $this->render('/User/actif.html.twig');
+
+        }
 
     }
 
     #[Route(path : 'registerUser', name:'registerUser', methods: ['GET', 'POST'])]
     public function registerUser(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
-        if($security->getUser()->getRoles()[0] === 'ROLE_ADMIN'){
+        if (!$security->isGranted('ROLE_BANNED')) {
             $user = new User();
             $form = $this->createForm(RegistrationUserFormType::class, $user);
 
@@ -195,74 +248,78 @@ class AdminController extends AbstractController
 
 
     #[Route(path:'registerUsers', name:'registerUsers', methods:['GET', 'POST'])]
-    public function registerUsers (EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, Request $request, SerializerInterface $serializer, ValidatorInterface $validator){
+    public function registerUsers (EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, Request $request, SerializerInterface $serializer, ValidatorInterface $validator, Security $security)
+    {
+        if (!$security->isGranted('ROLE_BANNED')) {
+            $form = $this->createForm(ListOfUsersType::class);
+            $form->handleRequest($request);
 
-        $form = $this->createForm(ListOfUsersType::class);
-        $form->handleRequest($request);
+            //récupération du champs File sous form de tableau (contenant un UploadedFile)
+            $csvFile = $request->files->get('list_of_users');
 
-        //récupération du champs File sous form de tableau (contenant un UploadedFile)
-        $csvFile = $request->files->get('list_of_users');
+            if ($form->isSubmitted()) {
 
-            if($form->isSubmitted()){
-
-                if($csvFile['list_of_users'] instanceof UploadedFile)
-                {
+                if ($csvFile['list_of_users'] instanceof UploadedFile) {
                     //Decoder le CSV : transformer le csv en Array
-                     $users = $serializer->decode(file_get_contents($csvFile['list_of_users']->getPathname()), 'csv');
+                    $users = $serializer->decode(file_get_contents($csvFile['list_of_users']->getPathname()), 'csv');
 
-                     foreach ($users as $newUser){
+                    foreach ($users as $newUser) {
 
-                         //Denormalize : transformer le Array en Object
-                         $user = $serializer->denormalize($newUser, User::class);
+                        //Denormalize : transformer le Array en Object
+                        $user = $serializer->denormalize($newUser, User::class);
 
-                         $user->setEmail($newUser['email']);
-                         $user->setPseudo($newUser['pseudo']);
-                         $user->setNom($newUser['nom']);
-                         $user->setPrenom($newUser['prenom']);
-                         $user->setTelephone($newUser['telephone']);
+                        $user->setEmail($newUser['email']);
+                        $user->setPseudo($newUser['pseudo']);
+                        $user->setNom($newUser['nom']);
+                        $user->setPrenom($newUser['prenom']);
+                        $user->setTelephone($newUser['telephone']);
 
-                         $site = $entityManager->getRepository(Site::class)->findOneBy(['nom' => $newUser['site']]);
-                         $user->setSiteId($site);
+                        $site = $entityManager->getRepository(Site::class)->findOneBy(['nom' => $newUser['site']]);
+                        $user->setSiteId($site);
 
-                         $user->setActif(0);
-                         $user->setRoles(['ROLE_USER']);
-                         // encode the plain password
-                         $user->setPassword(
-                             $userPasswordHasher->hashPassword(
-                                 $user,
-                                 $newUser['password']
-                             )
-                         );
+                        $user->setActif(0);
+                        $user->setRoles(['ROLE_USER']);
+                        // encode the plain password
+                        $user->setPassword(
+                            $userPasswordHasher->hashPassword(
+                                $user,
+                                $newUser['password']
+                            )
+                        );
 
-                         //Valider l'Objet utilisateur
-                         $constraintErrors = $validator->validate($user);
+                        //Valider l'Objet utilisateur
+                        $constraintErrors = $validator->validate($user);
 
-                         if(count($constraintErrors) > 0){
-                             $errorMessages=[];
+                        if (count($constraintErrors) > 0) {
+                            $errorMessages = [];
 
-                             foreach ($constraintErrors as $error){
-                                 $errorMessage = $error->getMessage();
-                                 $errorMessages[] = $errorMessage;
-                             }
-                             $errorMessageString = implode("<br>", $errorMessages);
-                             $this->addFlash('errorCSV', 'Echec création de comptes:<br>' . $errorMessageString);
-                         }else{
-                             $entityManager->persist($user);
-                             $entityManager->flush();
-                             $this->addFlash('success', 'Création de comptes réalisée avec succès !');
-                         }
-                         return $this->redirectToRoute('user_list');
+                            foreach ($constraintErrors as $error) {
+                                $errorMessage = $error->getMessage();
+                                $errorMessages[] = $errorMessage;
+                            }
+                            $errorMessageString = implode("<br>", $errorMessages);
+                            $this->addFlash('errorCSV', 'Echec création de comptes:<br>' . $errorMessageString);
+                        } else {
+                            $entityManager->persist($user);
+                            $entityManager->flush();
+                            $this->addFlash('success', 'Création de comptes réalisée avec succès !');
+                        }
+                        return $this->redirectToRoute('user_list');
 
-                     }
+                    }
 
                 }
 
             }
 
 
-
-        return $this->render('/admin/registerUsers.html.twig', [
-            'form'=>$form
-        ]);
+            return $this->render('/admin/registerUsers.html.twig', [
+                'form' => $form
+            ]);
+        }
+        else {
+            // Redirection vers la page de connexion si l'utilisateur est banni
+            return $this->render('/User/actif.html.twig');
+        }
     }
 }

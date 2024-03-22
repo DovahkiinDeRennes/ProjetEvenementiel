@@ -19,12 +19,11 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[Route(path:'user/', name: 'user_')]
 class UserModifyController extends AbstractController
 {
-
     #[Route(path: 'list', name: 'list', methods: ['GET', 'POST'])]
     public function list(EntityManagerInterface $entityManager): Response
     {
 
-// Vérifie si l'utilisateur a le rôle 'ROLE_ADMIN'
+        // Vérifie si l'utilisateur a le rôle 'ROLE_ADMIN'
         if ($this->isGranted('ROLE_ADMIN')) {
             $userId = $this->getUser()->getId();
             $users = $entityManager->getRepository(User::class)->findAll();
@@ -43,7 +42,7 @@ class UserModifyController extends AbstractController
             return $this->render('User/userList.html.twig', ['users' => $filteredUsers]);
         }
 
-// Si l'utilisateur n'a pas le rôle 'ROLE_ADMIN', affiche une autre vue
+        // Si l'utilisateur n'a pas le rôle 'ROLE_ADMIN', affiche une autre vue
         return $this->render('User/non.html.twig');
     }
 
@@ -108,61 +107,83 @@ class UserModifyController extends AbstractController
     #[Route(path: 'update/{id}', name: 'updateUser', methods: ['GET', 'POST'])]
     public function updateUser(Request $request,EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher, SluggerInterface $slugger,int $id): Response
     {
+        if (!$this->isGranted('ROLE_BANNED')) {
+            //Je récupère l'utilisateur connecté
+            $userId = $this->getUser()->getId();
+            $userConnected = $entityManager->getRepository(User::class)->find($userId);
 
-        // Je récupère l'utilisateur avec son id
-        $user = $entityManager->getRepository(User::class)->find($id);
-        // Je récupère le formulaire avec le user en paramètre
-        $form = $this->createForm(UserModifyType::class, $user);
-        $form->handleRequest($request);
+            // Je récupère l'utilisateur avec son id
+            $user = $entityManager->getRepository(User::class)->find($id);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-// Si dans le form l'input picture_file est rempli
-            if ($form->get('picture_file')->getData() instanceof UploadedFile) {
-                //alors on récupère les données
-                $pictureFile = $form->get('picture_file')->getData();
-                // puis on le renomme avec les pseudo et on lui met un id unique et l'extension
-                $fileName = $slugger->slug($user->getPseudo()) . '-' . uniqid() . '.' . $pictureFile->guessExtension();
-                // on le met dans le dossier public uploads (picture_dir : c'est le parametre de config, regarde le fichier services.yaml)
-                $pictureFile->move($this->getParameter('picture_dir'), $fileName);
+            //On ne peut modifier le profile que si c'est notre profil OU admin
+            if ($userConnected == $user or $this->isGranted('ROLE_ADMIN')) {
+                // Je récupère le formulaire avec le user en paramètre
+                $form = $this->createForm(UserModifyType::class, $user);
+                $form->handleRequest($request);
 
-                // on vérifie s'il y a une image
-                if (!empty($user->getPicture())) {
-                    //  c'est la fonction unlink qui supprime l'image (en gros en testant si l'image existe pour éviter d'avoir 20000 images dans le dossier public/uploads)
-                    $picturePath = $this->getParameter('picture_dir') . '/' . $user->getPicture();
-                    if (file_exists($picturePath)) {
-                        unlink($picturePath);
+                if ($form->isSubmitted() && $form->isValid()) {
+                    // Si dans le form l'input picture_file est rempli
+                    if ($form->get('picture_file')->getData() instanceof UploadedFile) {
+                        //alors on récupère les données
+                        $pictureFile = $form->get('picture_file')->getData();
+                        // puis on le renomme avec les pseudo et on lui met un id unique et l'extension
+                        $fileName = $slugger->slug($user->getPseudo()) . '-' . uniqid() . '.' . $pictureFile->guessExtension();
+                        // on le met dans le dossier public uploads (picture_dir : c'est le parametre de config, regarde le fichier services.yaml)
+                        $pictureFile->move($this->getParameter('picture_dir'), $fileName);
+
+                        // on vérifie s'il y a une image
+                        if (!empty($user->getPicture())) {
+                            //  c'est la fonction unlink qui supprime l'image (en gros en testant si l'image existe pour éviter d'avoir 20000 images dans le dossier public/uploads)
+                            $picturePath = $this->getParameter('picture_dir') . '/' . $user->getPicture();
+                            if (file_exists($picturePath)) {
+                                unlink($picturePath);
+                            }
+                        }
+                        // on rajoute le nouveau nom de l'image dans la bdd
+                        $user->setPicture($fileName);
                     }
+                    // on hash le mot de passe
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $form->get('password')->getData()
+                        )
+                    );
+
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                    // dd($user);
+                    return $this->redirectToRoute('home_home');
+
+
                 }
-                // on rajoute le nouveau nom de l'image dans la bdd
-                $user->setPicture($fileName);
+                // }
+
+                return $this->render('User/UserModify.html.twig', ['form' => $form->createView(), 'user' => $user]);
+
+            } else {
+                return $this->render('/User/non.html.twig');
             }
-            // on hash le mot de passe
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData()
-                )
-            );
 
-            $entityManager->persist($user);
-            $entityManager->flush();
-            // dd($user);
-            return $this->redirectToRoute('home_home');
-
-
+        }else {
+                // Redirection vers la page de connexion si l'utilisateur est banni
+                return $this->render('/User/actif.html.twig');
         }
-        // }
 
-        return $this->render('User/UserModify.html.twig', ['form' => $form->createView(), 'user' => $user]);
     }
 
     #[Route(path:'profil/{id}', name:'profil')]
     public function detail(int $id, UserRepository $userRepository): Response
     {
-        $user = $userRepository->find($id);
-        return $this->render('/User/profil.html.twig', [
-            'user' => $user
-        ]);
+        if (!$this->isGranted('ROLE_BANNED')) {
+            $user = $userRepository->find($id);
+            return $this->render('/User/profil.html.twig', [
+                'user' => $user
+            ]);
+        }else {
+            // Redirection vers la page de connexion si l'utilisateur est banni
+            return $this->render('/User/actif.html.twig');
+        }
     }
 
 // TEST POUR RECUP LES FICHIERS
