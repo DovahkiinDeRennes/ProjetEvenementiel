@@ -4,7 +4,8 @@
 
 
 {% block body %}
-    <div class="col-t4 col-12">
+<h1>Filtrer les sorties</h1>
+<div class="col-t4 col-12">
     <form class="back">
        {{ form_start(searchForm) }}
 
@@ -57,7 +58,7 @@
         <table class="">
             <thead>
             <tr>
-                <th>Nom de la sortie</th>
+                <th style="text-align: left;">Nom de la sortie</th>
                 <th>Date de la sortie</th>
                 <th>Site</th>
                 <th>Clôture</th>
@@ -66,13 +67,13 @@
                 <th>Inscrit</th>
                 <th>Organisateur</th>
                 <th>Actions</th>
-                <th>Actions Admin</th>
+
             </tr>
             </thead>
             <tbody>
             {% for sortie in sorties %}
                 <tr class="test">
-                    <td>{{ sortie.nom }}</td>
+                    <td style="font-size: 20px; text-align: left;">{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('Y-m-d H:i') }}</td>
                     <td>{% if sortie.site  is not empty %}{{ sortie.site.nom }}{% endif %}</td>
                     <td>{{ sortie.dateLimiteInscription | date('Y-m-d') }}</td>
@@ -92,7 +93,7 @@
                     </td>
 
                     <td>
-                        {%if sortie.etatId != null and sortie.etatId.id == 3 %}
+                        {%if sortie.organisateur == user and sortie.etatId != null and sortie.etatId.id == 3 %}
                         {# si etat = création ET id de la personne connectée = id sortie.organisateur #}
                       <a href="{{ url('sortie_update',{'id':sortie.id}) }}"><img src="{{ asset('images/6.png')}}"  title="Modifier" class="image2"></a>
                         <a href="{{ url('sortie_newEtat', {'id':sortie.id}) }}"><img src="{{ asset('images/7.png') }}" title="Publier" class="image2"></a>

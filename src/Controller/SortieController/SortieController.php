@@ -95,12 +95,13 @@ class SortieController extends AbstractController
                     $em->persist($sortie);
 
                     $em->flush();
+                    $this->addFlash('success', 'La sortie a bien été publie.');
                 }
             }
+            else {
+                $this->addFlash('error', 'Vous ne pouvez pas publier une sortie dont vous n\'estiez pas l\'organisateur.');
+            }
             // Récupérer la sortie avec son id
-
-
-
             return $this->redirectToRoute('home_home');
         }else
         {
@@ -127,8 +128,6 @@ class SortieController extends AbstractController
 
             // Ajouter la sortie a l'utilisateur (c'est une méthode de quoicoubeh? nan je rigole de l' Entity User)
             // On verifie l'etat + la date de cloture
-
-            //  $prout = new \DateTimeImmutable('now' , new \DateTimeZone('Europe/Paris')) = null, calendar = "gregorian", locale = null);
 
 
             if ($user->getId() == $sortie->getOrganisateur()->getId()) {
@@ -182,6 +181,7 @@ class SortieController extends AbstractController
                     if ($user->getSorties()) {
                         $user->removeSorty($sortie);
                         $em->flush();
+                        $this->addFlash('warning', 'Vous vous êtes désinscrit de la sortie avec succès.');
             }
             return $this->redirectToRoute('home_home');
         }else
@@ -207,6 +207,15 @@ class SortieController extends AbstractController
             if ($user->getId() == $sortie->getOrganisateur()->getId()) {
                 if ($form->isSubmitted() && $form->isValid()) {
 
+                if ($request->request->has('draft')) {
+                    $etatId = 3; // ID de l'état "Brouillon"
+                } elseif ($request->request->has('publish')) {
+                    $etatId = 4; // ID de l'état "Publié"
+                }
+
+                // Mettre à jour l'état de la sortie
+                $etat = $em->getRepository(Etat::class)->find($etatId);
+                $sortie->setEtatId($etat);
 
                     $em->persist($sortie);
 
