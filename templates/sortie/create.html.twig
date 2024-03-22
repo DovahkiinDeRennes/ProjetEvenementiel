@@ -3,8 +3,10 @@
     Créer une sortie | {{ parent() }}
 {% endblock %}
 {% block body %}
-    <h1>Créer une sortie</h1>
-    <div class="back">
+
+    <div class="flex">
+    <div class="back margR15" >
+        <h1>Créer une sortie</h1>
         <form method="post">
             {{ form_start(sortieForm) }}
             {{ form_row(sortieForm.nom) }}
@@ -25,17 +27,22 @@
             <a href="{{ url('home_home') }}">Annuler</a>
             {{ form_end(sortieForm) }}
 
-            <div id="afficheForm">
-                <div id="creation-lieu-form">
-
-                </div>
-
-            </div>
 
 
         </form>
 
 
+
+    </div>
+    <div class="back ">
+        <div id="afficheForm">
+            <h1>Creer un lieu</h1>
+            <div id="creation-lieu-form">
+
+            </div>
+
+        </div>
+    </div>
 
     </div>
     <script>
@@ -66,51 +73,10 @@
         }
 
 
-        document.getElementById('afficheForm').addEventListener('click', function() {
-
-        });
 
 
 
-        {#  function loadCreatePlaceForm() {
-            fetch("{{ path('formLieu') }}", {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            })
-                .then(response => response.json()) // Vous récupérez le texte brut du formulaire
-                .then(data => {
-                    // Injecter le formulaire HTML dans votre page
-                    document.getElementById('creation-lieu-form').innerHTML = data;
 
-                    // Ajouter un gestionnaire d'événement pour soumettre le formulaire
-                    document.getElementById('create_place_ajouter').addEventListener('submit', function(event) {
-                        event.preventDefault(); // Empêcher le comportement par défaut du formulaire
-
-                        // Récupérer les données du formulaire
-                        let formData = new FormData(document.getElementById('creation-lieu-form'));
-
-                        // Envoyer les données au serveur
-                        fetch("{{ path('submitLieuForm') }}", {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'text/html',
-                            },
-                            body: JSON.stringify(Object.fromEntries(formData.entries())) // Convertir FormData en objet JSON
-                        })
-                            .then(response => response.text())
-                            .then(data => {
-                                // Traiter la réponse du serveur si nécessaire
-                                console.log(data);
-                            })
-                            .catch(error => console.error('Error:', error));
-                    });
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        loadCreatePlaceForm();  #}
 
         function loadCreatePlaceForm() {
             fetch("{{ path('form_Lieu') }}")
@@ -125,6 +91,7 @@
 
                     formElement.addEventListener('submit', function (event) {
                         event.preventDefault();
+                        window.location.reload();
 
                         // Récupérer les données du formulaire
 
@@ -155,8 +122,8 @@
                 }
                 )
         }
-        loadCreatePlaceForm();
 
+        loadCreatePlaceForm();
 
 
 
